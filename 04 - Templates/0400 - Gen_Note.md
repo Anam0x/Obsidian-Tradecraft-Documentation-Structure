@@ -1,24 +1,14 @@
 <%* 
-var note;
-var body;
-var struct;
-var dest;
-var metadata;
-var timestamps;
-
-let validTitle = false;
-let title = tp.file.title;
-
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////// Functions /////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////
 
-// Name: getTitle
+// Name: setTitle
 // Description: Ensure a valid title is supplied, or prompt user for title.
 // Rename the created file from "Untitled" to what they've supplied.
 // Supports both creating notes from "new note" or "ctrl + click"
 async function setTitle() {
 
-	if (await validateTitle(title)) 
+	if (await isValidTitle(title)) 
 	{
 		console.log(`Title: "${title}" is valid`)
 		await tp.file.rename(title);
@@ -31,17 +21,16 @@ async function setTitle() {
 	}
 }
 
-// Name: validateTitle
+// Name: isValidTitle
 // Description: Checks supplied string (title) against 'undefined' type , null 
 // value, empty value and when the type is a string - we validate if it follows 
 // the default naming scheme of 'Untitled #' - rejects assignment of any of these 
 // cases
 // Return: Boolean
-async function validateTitle(noteTitle) {
+async function isValidTitle(noteTitle) {
 	// if nothing was supplied, try again
 	if (typeof noteTitle === 'undefined' || (typeof noteTitle === 'string' && noteTitle.includes('Untitled')) || noteTitle === null || noteTitle === "") 
 	{
-		console.log(noteTitle.includes('Untitled'))
 		return false;
 	} 
 	else 
@@ -52,106 +41,134 @@ async function validateTitle(noteTitle) {
 
 // Name: getNoteStruct
 // Description: Accepts the Search Tag (emoji) selected by the user
-// and returns the appropriate note name which defines the categories
-// body structure
-// Return: String
+// and returns the appropriate note structure configuration details
+// Return: Dictionary
 async function getNoteStruct(noteTag) {
-	var structName;
+	var noteStructConfig;
 	console.log("Getting Struct MD for tag: " + noteTag);
 	
-	if (tag.startsWith('📕')) {
-		structName = "[[0403 - Struct_TTP_Body]]";
-		dest = "03 - Content";
-		prefix = "";
-	} else if (tag.startsWith('🧰')) {
-		structName = "[[0404 - Struct_Tool_Body]]";
-		dest = "03 - Content";
-		prefix = "";
-	} else if (tag.startsWith('💡')) {
-		structName = "[[0405 - Struct_Idea_Body]]";
-		dest = "03 - Content";
-		prefix = "";
-	} else if (tag.startsWith('📖')) {
-		structName = "[[0406 - Struct_Documentation_Body]]";
-		dest = "03 - Content";
-		prefix = "";
-	} else if (tag.startsWith('🗺')) {
-		structName = "[[0409 - Struct_Secondary_Category_Body]]";
-		dest = "02 - Secondary Categories";
-		prefix = "02 - ";
-	} else if (tag.startsWith('㊙️')) {
-		structName = "[[0407 - Struct_Personal_Body]]";
-		dest = "05 - Personal";
-		prefix = "";
+	if (tag.startsWith("Primary")) {
+		console.log("Found Primary config");
+		noteStructConfig = {
+			name: "Primary",
+			prefix: "01 - ",
+			destination: "01 - Primary Categories/",
+			metadata: "[[04 - Templates/04 - Primary Category/0401 - Metadata]]",
+			body: "[[04 - Templates/04 - Primary Category/0402 - Body]]"
+
+		};
+	} else if (tag.startsWith("Secondary")) {
+		console.log("Found Secondary config");
+		noteStructConfig = {
+			name: "Secondary",
+			prefix: "02 - ",
+			destination: "02 - Secondary Categories/",
+			metadata: "[[04 - Templates/04 - Secondary Category/0401 - Metadata]]",
+			body: "[[04 - Templates/04 - Secondary Category/0402 - Body]]"
+		};
+	} else if (tag.startsWith("Basic")) {
+		console.log("Found Basic config");
+		noteStructConfig = {
+			name: "Basic",
+			prefix: "",
+			destination: "03 - Content/",
+			metadata: "[[040101 - Metadata]]",
+			header: "[[040102 - Header]]",
+			body: "[[040103 - Body]]"
+		};
+	} else if (tag.startsWith("Tool")) {
+		console.log("Found Tool config");
+		noteStructConfig = {
+			name: "Tool",
+			prefix: "",
+			destination: "03 - Content/",
+			metadata: "[[040201 - Metadata]]",
+			header: "[[040202 - Header]]",
+			body: "[[040203 - Body]]"
+		};
+	} else if (tag.startsWith("TTP")) {
+		console.log("Found TTP config");
+		noteStructConfig = {
+			name: "Basic",
+			prefix: "",
+			destination: "03 - Content/",
+			metadata: "[[040301 - Metadata]]",
+			header: "[[040302 - Header]]",
+			body: "[[040303 - Body]]"
+		};
+	} else if (tag.startsWith("Playbook")) {
+		console.log("Found Playbook config");
+		noteStructConfig = {
+			name: "Playbook",
+			prefix: "",
+			destination: "03 - Content/",
+			metadata: "[[040401 - Metadata]]",
+			header: "[[040402 - Header]]",
+			body: "[[040403 - Body]]"
+		};
+	} else if (tag.startsWith("Mindmap")) {
+		console.log("Found Mindmap config");
+		noteStructConfig = {
+			name: "Mindmap",
+			prefix: "",
+			destination: "03 - Content/",
+			metadata: "[[040501 - Metadata]]",
+			header: "[[040502 - Header]]",
+			body: "[[040503 - Body]]"
+		};
+	} else if (tag.startsWith("Debrief")) {
+		console.log("Found Debrief config");
+		noteStructConfig = {
+			name: "Debrief",
+			prefix: "",
+			destination: "03 - Content/",
+			metadata: "[[040601 - Metadata]]",
+			header: "[[040602 - Header]]",
+			body: "[[040603 - Body]]"
+		};
+	} else if (tag.startsWith("Payload")) {
+		console.log("Found Payload config");
+		noteStructConfig = {
+			name: "Payload",
+			prefix: "",
+			destination: "03 - Content/",
+			metadata: "[[040701 - Metadata]]",
+			header: "[[040702 - Header]]",
+			body: "[[040703 - Body]]"
+		};
+	} else if (tag.startsWith("Infrastructure")) {
+		console.log("Found Infrastructure config");
+		noteStructConfig = {
+			name: "Infrastructure",
+			prefix: "",
+			destination: "03 - Content/",
+			metadata: "[[040801 - Metadata]]",
+			header: "[[040802 - Header]]",
+			body: "[[040803 - Body]]"
+		};
 	} else {
 		console.log("You selected an option outside what was expected.");
 		console.log("Try again.");
 	}
-	return structName;
-}
-
-// Name: buildNote
-// Description: Performs the actual concatenation of our discrete header, body and 
-// footer note elements then handles the creation of the note itself.
-async function buildNote(title,struct) {
-
-	// Primary Note Elements\
-	var metadata = await setMetadata(tag) + "\n";
-	var header = await tp.file.include("[[0401 - Struct_Gen_Header]]") + "\n";
-	var catHeader = await tp.file.include("[[0408 - Struct_Secondary_Category_Header]]") + "\n";
-	var searchTag = "Search Tag: #" + tag + "  \n\n";
-	var pageTitle = "# [[" + title + "]]  \n";
-	var body = await tp.file.include(struct) + "\n"
-	var resources = await tp.file.include("[[0402 - Struct_Gen_Resources]]") + "\n";
-	var timestamps = await setTimestamps();
-	
-	console.log("Is the passed struct a complete template?");
-	//TODO: 
-	// Include logic to facilitate kickoff template etc
-	// move resulting note to 05 - Personal
-	if (!(await isCategory(struct))) {
-		console.log("Should we link to the struct that was passed?");
-		if (await ShouldLink(struct)) {
-			console.log("linking it");
-			// include header if the note should be linked
-			note = metadata + header + searchTag + pageTitle + body + resources + timestamps
-		} else {
-			console.log("not linking it for reasons");
-			// do not include header 
-			note = metadata + searchTag + pageTitle + body + resources + timestamps
-		}
-	} else {
-		console.log("the struct is a template");
-		// if template, include only its contents
-		note = catHeader + searchTag + pageTitle + body
-	}
-}
-
-// Name: setMetdata
-// Description: References templater file fields to build and assign the metdata
-// element which will prefix all content files and permit dataview quering
-// Returns: String
-async function setMetadata(inTag) {
-	var metadata = "---\ncreation date: " + tp.file.creation_date('MMMM Do YYYY') + "\nlast modified date: " + tp.file.last_modified_date('MMMM Do YYYY') + "\naliases: []\ntags: #" + inTag + "\n---\n";
-
-	return metadata;
+	return noteStructConfig;
+	//return "test";
 }
 
 // Name: setTimestamps
 // Description: Builds the timestamps element appended to note pages as they're built. Includes the definition of the Modified Date dynamic element which is updated when the page is edited and shown at the time of the page being rendered in preview mode.
 async function setTimestamps() {
-	var timestamps = "\nCreated Date: " + tp.file.creation_date('MMMM Do YYYY (hh:ss a)') + "  \nLast Modified Date: \<%+tp.file.last_modified_date(\"MMMM Do YYYY (hh:ss a)\")%\>";
+	var timestamps = "\nCreated Date: " + tp.file.creation_date('MMMM Do YYYY (HH:mm a)') + "  \nLast Modified Date: \<%+tp.file.last_modified_date(\"MMMM Do YYYY (HH:mm a)\")%\>";
 	
 	return timestamps;
 }
 
-// Name: isCategory
+// Name: isStructCategory
 // Description: Determines whether or not the struct is related to a category
-// by its name containing "category"
+// by its name equaling "Primary" or "Secondary"
 // Returns: Boolean
-async function isCategory(struct) {
+async function isStructCategory(structName) {
 	// dont build out template elements, just reference
-	if (struct.toLowerCase().includes('category')) {
+	if (structName == "Primary" || structName == "Secondary") {
 		console.log("yes");
 		return true;
 	} 
@@ -159,27 +176,29 @@ async function isCategory(struct) {
 	return false;
 }
 
-// Name: shouldLink
-// Description: Determines whether or not the Struct_Gen_Header should be included
-// on a new note based on a blacklist of struct names kept here.
-// Returns: Boolean
-async function ShouldLink(struct) {
+// Name: buildNote
+// Description: Performs the actual concatenation of our discrete header, body and 
+// footer note elements then handles the creation of the note itself.
+async function buildNote(title,noteStructConfig) {
 	
-	var dontLink = false;
-	var dontLinkTerms = ["personal"]
+	// Notes:
+	// - Leaving the search tag blank for now
+	// - Headers are intentionally left mostly blank for now
+	// - Timestamp has to be manually added as literal string; attempting to add timestamp
+	// as a property or included file results in "NaN" rendering or other errors
+	// - Removed setMetdata function; setting properties in included files is easier IMO
+	// - Removed shouldLink function; purpose unclear, seems unnecessary
+	var meta = await tp.file.include(noteStructConfig["metadata"]);
+	var body = await tp.file.include(noteStructConfig["body"]);
+	var time = await setTimestamps();
+	var isCategory = await isStructCategory(noteStructConfig["name"]);
 	
-	for (const structRoot of dontLinkTerms) {
-  		console.log("Is " + structRoot + " in " + struct.toLowerCase() + "?");
-		if (struct.toLowerCase().includes(structRoot.toLowerCase())) {
-			console.log(structRoot.toLowerCase() + " was found in " + struct.toLowerCase());
-			var dontLink = true;
-		}
+	if (isCategory === true) {
+		note = meta + body + time;
 	}
-	
-	if(dontLink) {
-		return false;
-	} else {
-		return true;
+	else if (isCategory === false) {
+		var head = await tp.file.include(noteStructConfig["header"]);
+		note = meta + head + body + time;
 	}
 }
 
@@ -187,18 +206,22 @@ async function ShouldLink(struct) {
 ////////////////////////////////////// Main //////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////
 
-// Present selection of Search Tags to user
-let tag = await tp.system.suggester(["📕 (TTP)", "🧰 (Tool)", "💡 (Idea)", "📖 (Documentation)", "㊙️ (Personal)", "🗺 (Secondary Category)"], ["📕", "🧰", "💡", "📖", "㊙️", "🗺"], true) 
+var note;
+var config;
+let title = tp.file.title;
 
-// Ensure the user isnt supplying an undefined or untitled note name
+// Present selection of Search Tags to user
+let tag = await tp.system.suggester(["🥇 (Primary)", "🥈 (Secondary)", "📝 (Basic)", "⛏️ (Tool)", "📕 (TTP)", "✅ (Playbook)", "🗺️ (Mindmap)", "⌛ (Debrief)", "💣 (Payload)", "🏗️ (Infrastructure)"], ["Primary", "Secondary", "Basic", "Tool", "TTP", "Playbook", "Mindmap", "Debrief", "Payload", "Infrastructure"], true);
+
+// Ensure the user is not supplying an undefined or untitled note name
 await setTitle(title);
 
 // Get the Struct associated with the Search Tag selected
-struct = await getNoteStruct(tag);
+config = await getNoteStruct(tag);
 
 // move file to appropriate corresponding folder
-await tp.file.move(dest + "/" + prefix + title);
+await tp.file.move(config["destination"] + "/" + config["prefix"] + title);
 
 //build the note
-await buildNote(title,struct);
+await buildNote(title,config);
 %><%* tR += `${note}` %>
