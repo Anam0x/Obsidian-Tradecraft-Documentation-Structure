@@ -1,16 +1,16 @@
 ---
-creation date: September 7th 2021
-last modified date: September 7th 2021
-aliases: []
-tags: #📖
+aliases: 
+tags:
+  - 📝
+primary categories:
+  - "[[01 - Administration]]"
+secondary categories:
+  - "[[02 - Obsidian]]"
+  - "[[02 - Resources]]"
+type: Basic
 ---
-
-Primary Categories: [[01 - Administration]]  
-Secondary Categories:  [[02 - Obsidian]] - [[02 - Resources]]  
-Links: [[Getting Started]]  
-Search Tag: #📖  
-
 # [[Obsidian - Getting Started]]  
+***
 
 ![[Pasted image 20210907111121.png]]
 
@@ -26,5 +26,5 @@ ___
 | --------- | ---- |
 
 
-Created Date: September 7th 2021 (11:00 am)  
-Last Modified Date: <%+tp.file.last_modified_date("MMMM Do YYYY (hh:ss a)")%>
+_Created Date_: <%+tp.file.creation_date("MMMM Do YYYY (HH:mm a)")%>
+_Last Modified Date_: <%+tp.file.last_modified_date("MMMM Do YYYY (HH:mm a)")%>

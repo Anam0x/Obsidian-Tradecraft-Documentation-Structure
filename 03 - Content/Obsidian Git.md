@@ -1,24 +1,23 @@
 ---
-creation date: September 7th 2021
-last modified date: September 7th 2021
-aliases: []
-tags: #📖
+aliases: 
+tags:
+  - 📝
+primary categories:
+  - "[[01 - Administration]]"
+secondary categories:
+  - "[[02 - Obsidian]]"
+  - "[[02 - Resources]]"
+type: Basic
 ---
-
-Primary Categories: [[01 - Administration]]  
-Secondary Categories:  [[02 - Obsidian]] - [[02 - Resources]]  
-Links: [[Synchronization]] - [[Git]] - [[Plugins]] - [[Required]]  
-Search Tag: #📖  
-
 # [[Obsidian Git]]
-
+***
 ## Description:
 
 Simple plugin that allows you to backup your [Obsidian.md](https://obsidian.md) vault to a remote git repository (e.g. private repo on GitHub). This plugin assumes you have existing git repository initialized locally and credentials are setup. This is the mechanism by which all your notes are sync'd to the Offpipe repository and shared between consultants. 
 
 ## Installation:
 
-1. Obsidian Git is a registered [[02 - Obsidian|Obsidian]]  Community Plugin and can be installed directly from `Settings > Community Plugins > Browse`
+1. Obsidian Git is a registered [[02 - Obsidian (old)|Obsidian]]  Community Plugin and can be installed directly from `Settings > Community Plugins > Browse`
 
 ## Configuration
 
@@ -52,5 +51,5 @@ ___
 | --------------------------------------------------------------------- | ---- |
 | [Obsidian Git Github Repo](https://github.com/denolehov/obsidian-git) |      | 
 
-Created Date: September 7th 2021 (11:24 am)  
-Last Modified Date: <%+tp.file.last_modified_date("MMMM Do YYYY (hh:ss a)")%>
+_Created Date_: <%+tp.file.creation_date("MMMM Do YYYY (HH:mm a)")%>
+_Last Modified Date_: <%+tp.file.last_modified_date("MMMM Do YYYY (HH:mm a)")%>

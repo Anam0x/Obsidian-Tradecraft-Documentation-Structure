@@ -1,17 +1,16 @@
 ---
-creation date: September 7th 2021
-last modified date: September 7th 2021
-aliases: []
-tags: #📖
+aliases: 
+tags:
+  - 📝
+primary categories:
+  - "[[01 - Administration]]"
+secondary categories:
+  - "[[02 - Obsidian]]"
+  - "[[02 - Resources]]"
+type: Basic
 ---
-
-Primary Categories: [[01 - Administration]]  
-Secondary Categories:  [[02 - Obsidian]] - [[02 - Resources]]  
-Links: [[CSS]] - [[Styling]] - [[Customization]]  
-Search Tag: #📖  
-
 # [[Obsidian - Custom CSS]]  
-
+***
 ## Enabling Custom CSS Snippets:
 
 To enable custom styling within Obsidian, you'll need to:
@@ -51,8 +50,8 @@ icon: triforce
 ```
 
 #### Example
-![[Linking Content#Before]]
-![[Linking Content#After]]
+![[Obsidian - Linking Content (Old)#Before]]
+![[Obsidian - Linking Content (Old)#After]]
 
 
 
@@ -258,5 +257,5 @@ ___
 | [Obsidian Forums Showcase](https://forum.obsidian.md/c/share-showcase/9) | The source for several of the above snippets | 
 
 
-Created Date: September 7th 2021 (12:02 pm)  
-Last Modified Date: <%+tp.file.last_modified_date("MMMM Do YYYY (hh:ss a)")%>
+_Created Date_: <%+tp.file.creation_date("MMMM Do YYYY (HH:mm a)")%>
+_Last Modified Date_: <%+tp.file.last_modified_date("MMMM Do YYYY (HH:mm a)")%>

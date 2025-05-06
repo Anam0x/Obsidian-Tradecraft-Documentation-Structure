@@ -6,19 +6,17 @@ primary categories:
   - "[[000 - Global Index (Start Here!)]]"
 type: Primary Category
 ---
-# [[Red Team]]
+# [[Penetration Test]]
 
 ## Command and Control (C2) Frameworks
 * [[02 - Cobalt Strike]]
 * [[02 - Mythic]]
 * [[02 - Metasploit]]
 
-## Reconnaissance
+## Reconnaissance and Initial Access
 * [[02 - Passive Reconnaissance]]
 * [[02 - Active Reconnaissance]]
-* [[02 - Vulnerability Scanning]]
-
-## Initial Access
+* [[02 - Vulnerability Scanning]] 
 * [[02 - Weaponization]]
 * [[02 - Client-Side Attacks]]
 * [[02 - Password Attacks]]
@@ -34,9 +32,7 @@ type: Primary Category
 * [[02 - Post-Exploitation]]
 * [[02 - Impersonation]]
 * [[02 - Lateral Movement]]
-* [[02 - Domain Dominance]]
-* [[02 - Persistence]]
-* [[02 - Exfiltration]]
+
 ## Specialized Topics
 * [[02 - Social Engineering]]
 * [[02 - Restricted Environment Escapes]]
