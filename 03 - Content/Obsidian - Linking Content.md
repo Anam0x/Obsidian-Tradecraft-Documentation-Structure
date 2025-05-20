@@ -3,10 +3,9 @@ aliases:
 tags:
   - 📝
 primary categories:
-  - "[[01 - Administration]]"
+  - "[[01 - Vault Administration]]"
 secondary categories:
   - "[[02 - Obsidian]]"
-  - "[[02 - Resources]]"
 type: Basic
 ---
 # [[Obsidian - Linking Content]]  

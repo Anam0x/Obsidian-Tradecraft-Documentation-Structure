@@ -3,15 +3,14 @@ aliases:
 tags:
   - 📝
 primary categories:
-  - "[[01 - Administration]]"
+  - "[[01 - Vault Administration]]"
 secondary categories:
   - "[[02 - Obsidian]]"
-  - "[[02 - Resources]]"
 type: Basic
 ---
 # [[Obsidian - Custom CSS]]  
 ***
-## Enabling Custom CSS Snippets:
+* [[02 - Vulnerability Scanning]]## Enabling Custom CSS Snippets:
 
 To enable custom styling within Obsidian, you'll need to:
 1. Create the associated 'snippets' folder within the obsidian vault filestructure. This folder can be created by going to `Settings > Appearences` and clicking on the folder icon (far right) shown below. This folder will be created within the `$VAULTPATH/.obsidian/` directory. 

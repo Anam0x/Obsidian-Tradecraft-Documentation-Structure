@@ -6,7 +6,11 @@ primary categories:
   - "[[000 - Global Index (Start Here!)]]"
 type: Primary Category
 ---
-# [[Wireless Security]]
+# [[01 - Wireless Security]]
+
+## Pre-Operation
+* [[02 - Client Engagement]]
+* [[02 - Weaponization]]
 
 ## Reconnaissance
 * [[02 - IEEE Standards]]

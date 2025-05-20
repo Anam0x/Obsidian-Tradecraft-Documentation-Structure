@@ -3,10 +3,9 @@ aliases:
 tags:
   - 📝
 primary categories:
-  - "[[01 - Administration]]"
+  - "[[01 - Vault Administration]]"
 secondary categories:
   - "[[02 - Obsidian]]"
-  - "[[02 - Resources]]"
 type: Basic
 ---
 # [[Templater]]
@@ -16,7 +15,7 @@ type: Basic
 
 [Templater](https://github.com/SilentVoid13/Templater) is a template language that lets you insert **variables** and **functions** results into your [Obsidian](https://obsidian.md/) notes. 
 
-![templater_demo](https://raw.githubusercontent.com/SilentVoid13/Templater/master/imgs/templater_demo.gif)
+![templater_demo](https://github.com/SilentVoid13/Templater/blob/561ac7bb30dbc2aff6aeab0dd7aa9883bef4fca8/imgs/templater_demo.gif?raw=true)
 
 ## How we'll use Templater
 - Prompt for the Search tag on note creation
@@ -30,7 +29,7 @@ type: Basic
 
 ## Installation:
 
-1. Templater is a registered Obsidian [[02 - Plugins#Community Plugins]] and can be installed directly from `Settings > Community Plugins > Browse`
+1. Templater is a registered Obsidian [Plugin]([[Obsidian - Plugins#Required]]) and can be installed directly from `Settings > Community Plugins > Browse`
 
 ## Configuration
 

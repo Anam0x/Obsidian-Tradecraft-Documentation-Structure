@@ -7,6 +7,7 @@
 - [ ] git support
   - [ ] .gitignore
 - [ ] Testing script
+- [ ] Add logic to pre-populate primary and secondary categories when creating new note
 
 ### In Progress
 

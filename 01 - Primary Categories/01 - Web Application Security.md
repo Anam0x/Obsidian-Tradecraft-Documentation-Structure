@@ -6,7 +6,11 @@ primary categories:
   - "[[000 - Global Index (Start Here!)]]"
 type: Primary Category
 ---
-# [[Web Application Assessment]]
+# [[01 - Web Application Security]]
+
+## Pre-Operation
+* [[02 - Client Engagement]]
+* [[02 - Weaponization]]
 
 ## Reconnaissance
 * [[02 - Passive Reconnaissance]]
@@ -14,7 +18,6 @@ type: Primary Category
 * [[02 - Vulnerability Scanning]] 
 
 ## Initial Access
-* [[02 - Weaponization]]
 * [[02 - Server-Side Attacks]]
 * [[02 - Client-Side Attacks]]
 

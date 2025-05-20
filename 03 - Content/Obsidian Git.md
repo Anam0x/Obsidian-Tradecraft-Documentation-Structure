@@ -3,10 +3,9 @@ aliases:
 tags:
   - 📝
 primary categories:
-  - "[[01 - Administration]]"
+  - "[[01 - Vault Administration]]"
 secondary categories:
   - "[[02 - Obsidian]]"
-  - "[[02 - Resources]]"
 type: Basic
 ---
 # [[Obsidian Git]]
@@ -17,7 +16,7 @@ Simple plugin that allows you to backup your [Obsidian.md](https://obsidian.md) 
 
 ## Installation:
 
-1. Obsidian Git is a registered [[02 - Obsidian (old)|Obsidian]]  Community Plugin and can be installed directly from `Settings > Community Plugins > Browse`
+1. Obsidian Git is a registered Obsidian [Plugin]([[Obsidian - Plugins#Required]]) and and can be installed directly from `Settings > Community Plugins > Browse`
 
 ## Configuration
 

@@ -4,7 +4,7 @@ tags:
   - 🥈
 primary categories:
   - "[[000 - Global Index (Start Here!)]]"
-  - "[[01 - Administration]]"
+  - "[[01 - Vault Administration]]"
 type: Secondary Category
 ---
 # [[Obsidian]]  

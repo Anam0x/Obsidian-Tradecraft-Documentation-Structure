@@ -3,21 +3,20 @@ aliases:
 tags:
   - 📝
 primary categories:
-  - "[[01 - Administration]]"
+  - "[[01 - Vault Administration]]"
 secondary categories:
   - "[[02 - Obsidian]]"
-  - "[[02 - Resources]]"
 type: Basic
 ---
 # [[Obsidian - Plugins]]  
 ***
 ## Required
-[[Obsidian Git (Old)]]  
-[[Templater (Old)]]  
+[[Obsidian Git]]  
+[[Templater]]  
 
 ## Additional
-[[Dataview]]  
-[[Admonition (Old)]]  
+[[Dataview]] 
+[[Admonition]]  
 
 ___
 
