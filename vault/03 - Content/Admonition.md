@@ -19,7 +19,8 @@ Adds admonition block-styled content to Obsidian.md, styled after [Material for 
 
 ## Installation:
 
-1. Admonition is a registered Obsidian [Plugin]([[Obsidian - Plugins#Additional]]) and can be installed directly from `Settings > Community Plugins > Browse`
+1. Admonition is a registered Obsidian plugin and can be installed directly from `Settings > Community Plugins > Browse`
+	* [[Obsidian - Plugins#Additional]]
 
 ## Configuration
 1. Nothing required beyond installation for default admonition block element display

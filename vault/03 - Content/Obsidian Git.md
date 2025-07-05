@@ -16,7 +16,8 @@ Simple plugin that allows you to backup your [Obsidian.md](https://obsidian.md) 
 
 ## Installation:
 
-1. Obsidian Git is a registered Obsidian [Plugin]([[Obsidian - Plugins#Required]]) and and can be installed directly from `Settings > Community Plugins > Browse`
+1. Obsidian Git is a registered Obsidian plugin and and can be installed directly from `Settings > Community Plugins > Browse`
+	* [[Obsidian - Plugins#Required]]
 
 ## Configuration
 

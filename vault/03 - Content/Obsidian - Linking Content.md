@@ -16,14 +16,14 @@ type: Basic
 
 2. Obsidian allows the linking of content to a note at **3** levels ^0266aa
 
-| Result                                     | Command                        | Example                     |
-| ------------------------------------------ | ------------------------------ | --------------------------- |
-| Link to an entire note                     | `[[name of the note]]`         | [[Obsidian - Linking Content (Old)]]         |
-| Link to a notes heading                    | `[[name of the note#heading]]` | [[Obsidian - Linking Content (Old)#Details]] |
-| Link to a block within a specified heading | `[[name of the note^blockname` | [[Obsidian - Linking Content (Old)#^0266aa]] | 
+| Result                                     | Command                        | Example                                    |
+| ------------------------------------------ | ------------------------------ | ------------------------------------------ |
+| Link to an entire note                     | `[[name of the note]]`         | [[Obsidian - Linking Content]]             |
+| Link to a notes heading                    | `[[name of the note#heading]]` | [[Obsidian - Linking Content#Description]] |
+| Link to a block within a specified heading | `[[name of the note^blockname` | [[Obsidian - Linking Content#^0266aa]]     |
 
 3. At each stage of linking, the relevant content can instead be embedded by adding the *!* prefix ^0834a4
-	1. Example linking to the above: [[Obsidian - Linking Content (Old)#^0834a4]]
+	1. Example linking to the above: [[Obsidian - Linking Content]]
 	2. As you can see above, a reference *ID* is added to the target block of text
 	3. As you're linking, Obsidian will parse and present all possible headings/blocks for selection
  

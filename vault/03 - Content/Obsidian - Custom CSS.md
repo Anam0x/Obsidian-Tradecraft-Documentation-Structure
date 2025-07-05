@@ -10,7 +10,7 @@ type: Basic
 ---
 # [[Obsidian - Custom CSS]]  
 ***
-* [[02 - Vulnerability Scanning]]## Enabling Custom CSS Snippets:
+## Enabling Custom CSS Snippets:
 
 To enable custom styling within Obsidian, you'll need to:
 1. Create the associated 'snippets' folder within the obsidian vault filestructure. This folder can be created by going to `Settings > Appearences` and clicking on the folder icon (far right) shown below. This folder will be created within the `$VAULTPATH/.obsidian/` directory. 
@@ -253,7 +253,7 @@ ___
 
 | Hyperlink                                                                | Info                                         |
 | ------------------------------------------------------------------------ | -------------------------------------------- |
-| [Obsidian Forums Showcase](https://forum.obsidian.md/c/share-showcase/9) | The source for several of the above snippets | 
+| [Obsidian Forums Showcase](https://forum.obsidian.md/c/share-showcase/9) | The source for several of the above snippets |
 
 
 _Created Date_: <%+tp.file.creation_date("MMMM Do YYYY (HH:mm a)")%>

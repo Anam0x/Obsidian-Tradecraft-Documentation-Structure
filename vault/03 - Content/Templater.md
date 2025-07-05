@@ -29,7 +29,8 @@ type: Basic
 
 ## Installation:
 
-1. Templater is a registered Obsidian [Plugin]([[Obsidian - Plugins#Required]]) and can be installed directly from `Settings > Community Plugins > Browse`
+1. Templater is a registered Obsidian plugin and can be installed directly from `Settings > Community Plugins > Browse`
+	* [[Obsidian - Plugins#Required]]
 
 ## Configuration
 
