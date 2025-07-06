@@ -1,11 +1,11 @@
 # to exclude Obsidian workspace settings (including plugin and hotkey configurations)
-vault/.obsidian/*
+Adversary*Simulation*Field*Manual/.obsidian/*
 
 # OR only to exclude workspace cache
-vault/.obsidian/workspace/*
+Adversary*Simulation*Field*Manual/workspace/*
 
 # Exclude plugins
-vault/.obsidian/plugins/*
+Adversary*Simulation*Field*Manual/.obsidian/plugins/*
 
 # Exclude trash
-vault/.trash/*
+Adversary*Simulation*Field*Manual/.trash/*
