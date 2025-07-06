@@ -6,7 +6,10 @@ primary categories:
   - "[[01 - Development]]"
   - "[[01 - Penetration Test]]"
   - "[[01 - Red Team]]"
-secondary categories: []
+secondary categories:
+  - "[[02 - PowerShell]]"
+  - "[[02 - Weaponization]]"
+  - "[[02 - Payload Engineering]]"
 type: Payload
 ---
 # [[Reflective PowerShell Shellcode Runner]]
