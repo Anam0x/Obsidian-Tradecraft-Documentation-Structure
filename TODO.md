@@ -17,7 +17,7 @@
 - [ ] Create example categories and content
   - [x] Basic
   - [ ] Tool (`impacket-GetUserSPNs`)
-  - [ ] TTP (`Steal or Forge Kerberos Tickets - Kerberoasting (T1558.003)`)
+  - [x] TTP (`Steal or Forge Kerberos Tickets - Kerberoasting (T1558.003)`)
   - [x] Playbook (`PowerView Enumeration Checklist`)
   - [x] Mindmap (`AD - mindmap 2025 - 03`)
   - [x] Debrief (`Example Hack The Box Retired Machine`)
