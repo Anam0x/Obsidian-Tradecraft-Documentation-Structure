@@ -56,13 +56,18 @@ If you're using included CSS snippets nonexistant nodes become a bit more visabl
 
 5. If you're using templates when creating new notes, the hierarchical folder structure above your new note is automatically applied to the note a series of links. Unlike [[Tagging Content|Tags]], several *links* should be added to new notes with the idea that more meaningful links creates more relationships/opportunity for relationships between notes. This process should ultimately lead to a natural distillation of categorical knowledge and thus a new category and MOC.
 
-
+***
 
 ## Resources:
 
 | Hyperlink | Info |
 | --------- | ---- |
+|           |      |
 
+[^1]: 
 
-_Created Date_: <%+tp.file.creation_date("MMMM Do YYYY (HH:mm a)")%>
-_Last Modified Date_: <%+tp.file.last_modified_date("MMMM Do YYYY (HH:mm a)")%>
+***
+
+*Created Date*: <%+tp.file.creation_date("MMMM Do YYYY (HH:mm a)")%>  
+*Last Modified Date*: <%+tp.file.last_modified_date("MMMM Do YYYY (HH:mm a)")%>
+

@@ -54,5 +54,9 @@ ___
 | [Templater Github Repo](https://github.com/SilentVoid13/Templater)        |      |
 | [Templater Documentation](https://silentvoid13.github.io/Templater/docs/) |      |
 
-_Created Date_: <%+tp.file.creation_date("MMMM Do YYYY (HH:mm a)")%>
-_Last Modified Date_: <%+tp.file.last_modified_date("MMMM Do YYYY (HH:mm a)")%>
+[^1]: 
+
+***
+
+*Created Date*: <%+tp.file.creation_date("MMMM Do YYYY (HH:mm a)")%>  
+*Last Modified Date*: <%+tp.file.last_modified_date("MMMM Do YYYY (HH:mm a)")%>

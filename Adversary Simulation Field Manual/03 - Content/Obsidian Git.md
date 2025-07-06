@@ -51,5 +51,9 @@ ___
 | --------------------------------------------------------------------- | ---- |
 | [Obsidian Git Github Repo](https://github.com/denolehov/obsidian-git) |      | 
 
-_Created Date_: <%+tp.file.creation_date("MMMM Do YYYY (HH:mm a)")%>
-_Last Modified Date_: <%+tp.file.last_modified_date("MMMM Do YYYY (HH:mm a)")%>
+[^1]: 
+
+***
+
+*Created Date*: <%+tp.file.creation_date("MMMM Do YYYY (HH:mm a)")%>  
+*Last Modified Date*: <%+tp.file.last_modified_date("MMMM Do YYYY (HH:mm a)")%>

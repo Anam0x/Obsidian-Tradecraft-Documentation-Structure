@@ -77,6 +77,8 @@ Initial access was achieved by exploiting a vulnerable WordPress plugin that per
 | [MITRE ATT&CK Framework](https://attack.mitre.org/)            |      |
 | [Hack The Box](https://www.hackthebox.com/hacker/hacking-labs) |      |
 
+[^1]: 
+
 ***
 
 *Created Date*: <%+tp.file.creation_date("MMMM Do YYYY (HH:mm a)")%>  

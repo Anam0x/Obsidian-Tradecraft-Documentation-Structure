@@ -458,12 +458,12 @@ Find-InterestingDomainShareFile -Include *.doc*, *.xls*, *.ppt*, *.csv, *.pdf, *
 | [HarmJ0y GitHub Gist - PowerView 3.0 Tricks](https://gist.github.com/HarmJ0y/184f9822b195c52dd50c379ed3117993)                           | PowerView 3.0 Sample Commands by PowerSploit Co-creator                    |
 | [PowerSploit - Recon](https://powersploit.readthedocs.io/en/latest/Recon/)                                                               | Official PowerSploit Documentation for PowerView                           |
 
-***
-
 [^1]: https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/get-started/virtual-dc/active-directory-domain-services-overview
 [^2]: https://powersploit.readthedocs.io/en/latest/Recon/
 [^3]: https://github.com/its-a-feature/Mythic
 [^4]: https://github.com/MythicAgents/Apollo
+
+***
 
 *Created Date*: <%+tp.file.creation_date("MMMM Do YYYY (HH:mm a)")%>  
 *Last Modified Date*: <%+tp.file.last_modified_date("MMMM Do YYYY (HH:mm a)")%>

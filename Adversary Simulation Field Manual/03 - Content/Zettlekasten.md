@@ -18,6 +18,9 @@ type: Basic
 | Hyperlink | Info |
 | --------- | ---- |
 |           |      |
+
+[^1]: 
+
 ***
 
 *Created Date*: <%+tp.file.creation_date("MMMM Do YYYY (HH:mm a)")%>  
