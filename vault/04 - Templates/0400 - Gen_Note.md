@@ -133,9 +133,9 @@ async function getNoteStruct(noteTag) {
 			header: "[[040802 - Header]]",
 			body: "[[040803 - Body]]"
 		};
-	} else if (noteTag.startsWith("Education")) {
+	} else if (noteTag.startsWith("Study Resources")) {
 		noteStructConfig = {
-			name: "Education",
+			name: "Study Resources",
 			prefix: "",
 			destination: "03 - Content/",
 			metadata: "[[040901 - Metadata]]",
@@ -145,7 +145,7 @@ async function getNoteStruct(noteTag) {
 	} else {
 		console.log("You selected an option outside what was expected.");
 		console.log("Try again.");
-		const newNoteTag = await tp.system.suggester(["🥇 (Primary Category)", "🥈 (Secondary Category)", "📝 (Basic)", "⛏️ (Tool)", "📕 (TTP)", "✅ (Playbook)", "🗺️ (Mindmap)", "⌛ (Debrief)", "💣 (Payload)", "🏗️ (Infrastructure)", "🎓 (Education)"], ["Primary", "Secondary", "Basic", "Tool", "TTP", "Playbook", "Mindmap", "Debrief", "Payload", "Infrastructure", "Education"], true);
+		const newNoteTag = await tp.system.suggester(["🥇 (Primary Category)", "🥈 (Secondary Category)", "📝 (Basic)", "⛏️ (Tool)", "📕 (TTP)", "✅ (Playbook)", "🗺️ (Mindmap)", "⌛ (Debrief)", "💣 (Payload)", "🏗️ (Infrastructure)", "🎓 (Study Resources)"], ["Primary", "Secondary", "Basic", "Tool", "TTP", "Playbook", "Mindmap", "Debrief", "Payload", "Infrastructure", "Study Resources"], true);
 		return await getNoteStruct(newNoteTag);
 	}
 	return noteStructConfig;
@@ -204,7 +204,7 @@ async function buildNote(title,noteStructConfig) {
 //////////////////////////////////////////////////////////////////////////////////
 
 // Present selection of Search Tags to user
-const noteTag = await tp.system.suggester(["🥇 (Primary Category)", "🥈 (Secondary Category)", "📝 (Basic)", "⛏️ (Tool)", "📕 (TTP)", "✅ (Playbook)", "🗺️ (Mindmap)", "⌛ (Debrief)", "💣 (Payload)", "🏗️ (Infrastructure)", "🎓 (Education)"], ["Primary", "Secondary", "Basic", "Tool", "TTP", "Playbook", "Mindmap", "Debrief", "Payload", "Infrastructure", "Education"], true);
+const noteTag = await tp.system.suggester(["🥇 (Primary Category)", "🥈 (Secondary Category)", "📝 (Basic)", "⛏️ (Tool)", "📕 (TTP)", "✅ (Playbook)", "🗺️ (Mindmap)", "⌛ (Debrief)", "💣 (Payload)", "🏗️ (Infrastructure)", "🎓 (Study Resources)"], ["Primary", "Secondary", "Basic", "Tool", "TTP", "Playbook", "Mindmap", "Debrief", "Payload", "Infrastructure", "Study Resources"], true);
 
 // Ensure the user is not supplying an undefined or untitled note name
 let title = tp.file.title;
