@@ -2,11 +2,9 @@
 
 ## Overview
 
-This project was inspired by TrustedSec's investigation into using Obsidian (https://obsidian.md/) as a collaborative knowledge management solution. The repository is designed to be used as a companion during offensive security consulting engagements and practical cybersecurity certification exams. The majority of the logical implementation was borrowed from TrustedSec's original blog post (https://www.trustedsec.com/blog/obsidian-taming-a-collective-consciousness/) describing the vaults composition and use; I have modified the vault to reflect my personal methodology and learning style.
+This project was inspired by TrustedSec's investigation into using [Obsidian](https://obsidian.md/) as a collaborative knowledge management solution for adversary simulation professionals. The repository is designed to serve as a companion resource during offensive security consulting engagements and practical cybersecurity certification exams.
 
-## Requirements
-
-TODO
+The overall structure and logical implementation were largely based on TrustedSec’s original blog post, [Obsidian: Taming a Collective Consciousness](https://www.trustedsec.com/blog/obsidian-taming-a-collective-consciousness/), which describes vault composition and usage. I have modified the vault to better reflect my personal methodology, professional interests, and learning style. Additionally, certain features intended for team collaboration have been removed, as this project is primarily intended for personal use.
 
 ## Installation
 
