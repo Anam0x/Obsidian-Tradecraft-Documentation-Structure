@@ -1,16 +1,18 @@
 ### Todo
 
-- [ ] Provide installation script
+- [ ] Provide installation script (either in README or in a scripts directory)
   - [ ] Linux, Windows, macOS support (at the very least, a dedicated section in the README)
   - [ ] Automatically install, enable, configure required community plugins
-- [ ] Insert GIFs for demonstrations
 - [ ] git support
   - [ ] .gitignore
+  - [ ] Setup instructions added to README
 - [ ] Testing script (necessary?)
 - [ ] Add logic to pre-populate primary and secondary categories when creating new note
 - [ ] Fix missing original notes
   - [ ] Dataview
   - [ ] Zettlekasten
+- [ ] Fill out blank primary and secondary categories; only commit categories if they are back-linked by content notes
+- [ ] Add Python script to scrape MITRE ATT&CK Framework and generate TTP notes
 
 ### In Progress
 
