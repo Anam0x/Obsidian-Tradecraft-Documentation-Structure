@@ -6,10 +6,10 @@ primary categories:
   - "[[01 - Penetration Test]]"
   - "[[01 - Red Team]]"
 secondary categories:
-  - Add link(s) [[]] back to related SECONDARY categories
+  - "[[02 - C2 Tradecraft & Profiles]]"
 type: Infrastructure
 ---
-# [[Secure C2 Infrastructure Design]]
+# [[C2 Redirector]]
 
 ***
 ## Overview
