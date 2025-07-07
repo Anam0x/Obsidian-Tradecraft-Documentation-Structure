@@ -181,9 +181,9 @@ $hThread = [System.Runtime.InteropServices.Marshal]::GetDelegateForFunctionPoint
 ***
 ## Resources:
 
-| Hyperlink                                                                              | Info             |
-| -------------------------------------------------------------------------------------- | ---------------- |
-| [_braaax_/`run.ps1`](https://gist.github.com/braaaax/41789bad5d07b8ba236299047a774ffa) | GitHub Gist Page |
+| Hyperlink                                                                              | Info                                     |
+| -------------------------------------------------------------------------------------- | ---------------------------------------- |
+| [_braaax_/`run.ps1`](https://gist.github.com/braaaax/41789bad5d07b8ba236299047a774ffa) | GitHub Gist page for payload by *braaax* |
 
 [^1]: 
 

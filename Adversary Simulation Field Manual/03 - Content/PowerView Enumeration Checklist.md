@@ -451,12 +451,12 @@ Find-InterestingDomainShareFile -Include *.doc*, *.xls*, *.ppt*, *.csv, *.pdf, *
 ***
 ## Resources:
 
-| Hyperlink                                                                                                                                | Info                                                                       |
-| ---------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
-| [HarmJ0y CheatSheets - PowerView](https://github.com/HarmJ0y/CheatSheets/blob/master/PowerView.pdf)                                      | PowerView 3.0 Cheat Sheet by PowerSploit Co-creator                        |
-| [Active Directory - Enumeration: PowerView CheatSheet](https://zflemingg1.gitbook.io/undergrad-tutorials/powerview/powerview-cheatsheet) | Zach Fleming's (AKA _zflemingg1_) Active Directory Enumeration Cheat Sheet |
-| [HarmJ0y GitHub Gist - PowerView 3.0 Tricks](https://gist.github.com/HarmJ0y/184f9822b195c52dd50c379ed3117993)                           | PowerView 3.0 Sample Commands by PowerSploit Co-creator                    |
-| [PowerSploit - Recon](https://powersploit.readthedocs.io/en/latest/Recon/)                                                               | Official PowerSploit Documentation for PowerView                           |
+| Hyperlink                                                                                                                                | Info                                                         |
+| ---------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------ |
+| [HarmJ0y CheatSheets - PowerView](https://github.com/HarmJ0y/CheatSheets/blob/master/PowerView.pdf)                                      | PowerView 3.0 cheat sheet by PowerSploit co-creator          |
+| [Active Directory - Enumeration: PowerView CheatSheet](https://zflemingg1.gitbook.io/undergrad-tutorials/powerview/powerview-cheatsheet) | Zach Fleming's (AKA _zflemingg1_) AD enumeration cheat sheet |
+| [HarmJ0y GitHub Gist - PowerView 3.0 Tricks](https://gist.github.com/HarmJ0y/184f9822b195c52dd50c379ed3117993)                           | PowerView 3.0 sample commands by PowerSploit co-creator      |
+| [PowerSploit - Recon](https://powersploit.readthedocs.io/en/latest/Recon/)                                                               | PowerView documentation                                      |
 
 [^1]: https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/get-started/virtual-dc/active-directory-domain-services-overview
 [^2]: https://powersploit.readthedocs.io/en/latest/Recon/

@@ -67,8 +67,8 @@ Cracked hashes may enable Persistence, Privilege Escalation, and Lateral Movemen
 
 | Hyperlink                                                                                        | Info                                                     |
 | ------------------------------------------------------------------------------------------------ | -------------------------------------------------------- |
-| [Steal or Forge Kerberos Tickets: Kerberoasting](https://attack.mitre.org/techniques/T1558/003/) | MITRE ATT&CK Entry for "Kerberoasting"                   |
-| [Steal or Forge Kerberos Tickets, Technique T1558](https://attack.mitre.org/techniques/T1558/)   | MITRE ATT&CK Entry for "Steal or Forge Kerberos Tickets" |
+| [Steal or Forge Kerberos Tickets: Kerberoasting](https://attack.mitre.org/techniques/T1558/003/) | MITRE ATT&CK entry for "Kerberoasting"                   |
+| [Steal or Forge Kerberos Tickets, Technique T1558](https://attack.mitre.org/techniques/T1558/)   | MITRE ATT&CK entry for "Steal or Forge Kerberos Tickets" |
 
 [^1]: https://github.com/EmpireProject/Empire/blob/master/data/module_source/credentials/Invoke-Kerberoast.ps1
 [^2]: https://adsecurity.org/?p=2293

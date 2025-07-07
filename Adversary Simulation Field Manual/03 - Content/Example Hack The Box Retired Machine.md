@@ -72,10 +72,10 @@ Initial access was achieved by exploiting a vulnerable WordPress plugin that per
 ***
 ## Resources:
 
-| Hyperlink                                                      | Info |
-| -------------------------------------------------------------- | ---- |
-| [MITRE ATT&CK Framework](https://attack.mitre.org/)            |      |
-| [Hack The Box](https://www.hackthebox.com/hacker/hacking-labs) |      |
+| Hyperlink                                                      | Info                             |
+| -------------------------------------------------------------- | -------------------------------- |
+| [MITRE ATT&CK Framework](https://attack.mitre.org/)            | MITRE ATT&CK Framework           |
+| [Hack The Box](https://www.hackthebox.com/hacker/hacking-labs) | Hack The Box online lab platform |
 
 [^1]: 
 

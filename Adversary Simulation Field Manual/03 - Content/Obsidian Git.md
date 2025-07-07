@@ -49,7 +49,7 @@ ___
 
 | Hyperlink                                                             | Info |
 | --------------------------------------------------------------------- | ---- |
-| [Obsidian Git Github Repo](https://github.com/denolehov/obsidian-git) |      | 
+| [Obsidian Git Github Repo](https://github.com/denolehov/obsidian-git) |      |
 
 [^1]: 
 

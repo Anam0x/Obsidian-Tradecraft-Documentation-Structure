@@ -24,11 +24,11 @@ The [AD - mindmap 2025 - 03](https://orange-cyberdefense.github.io/ocd-mindmaps/
 ***
 ## Resources:
 
-| Hyperlink                                                                                                                                       | Info                              |
-| ----------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------- |
-| [Orange Cyberdefense](https://github.com/Orange-Cyberdefense)                                                                                   | GitHub Profile                    |
-| [ocd-mindmaps](https://orange-cyberdefense.github.io/ocd-mindmaps/)                                                                             | Mindmap Website                   |
-| [ocd-mindmaps - "AD - mindmap 2025 -03"](https://orange-cyberdefense.github.io/ocd-mindmaps/img/mindmap_ad_dark_classic_2025.03.excalidraw.svg) | Mindmap Website - Navigation Page |
+| Hyperlink                                                                                                                                       | Info                                         |
+| ----------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------- |
+| [Orange Cyberdefense](https://github.com/Orange-Cyberdefense)                                                                                   | GitHub profile for *Orange-Cyberdefense*     |
+| [ocd-mindmaps](https://orange-cyberdefense.github.io/ocd-mindmaps/)                                                                             | Orange Cyberdefense mindmaps                 |
+| [ocd-mindmaps - "AD - mindmap 2025 -03"](https://orange-cyberdefense.github.io/ocd-mindmaps/img/mindmap_ad_dark_classic_2025.03.excalidraw.svg) | Orange Cyberdefense mindmaps navigation page |
 
 [^1]: 
 
