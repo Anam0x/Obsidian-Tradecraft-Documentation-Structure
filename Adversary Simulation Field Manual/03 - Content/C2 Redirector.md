@@ -60,6 +60,7 @@ Redirectors, like most C2 infrastructure, should be treated as disposable assets
 
 ## Graphic
 
+![[c2-redirectors.drawio.png]]
 
 ***
 ## Resources:
