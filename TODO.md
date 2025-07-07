@@ -13,12 +13,13 @@
   - [ ] Zettlekasten
 - [ ] Fill out blank primary and secondary categories; only commit categories if they are back-linked by content notes
 - [ ] Add Python script to scrape MITRE ATT&CK Framework and generate TTP notes
+- [ ] Add style guide to root of vault
 
 ### In Progress
 
 - [ ] Create example categories and content
   - [x] Basic
-  - [ ] Tool (`impacket-GetUserSPNs`)
+  - [x] Tool (`impacket-GetUserSPNs`)
   - [x] TTP (`Steal or Forge Kerberos Tickets - Kerberoasting (T1558.003)`)
   - [x] Playbook (`PowerView Enumeration Checklist`)
   - [x] Mindmap (`AD - mindmap 2025 - 03`)
