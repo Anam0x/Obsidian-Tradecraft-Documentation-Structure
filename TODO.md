@@ -8,10 +8,10 @@
   - [ ] Setup instructions added to README
 - [ ] Testing script (necessary?)
 - [ ] Add Python script to scrape MITRE ATT&CK Framework and generate TTP notes
+- [ ] Add logic to pre-populate primary and secondary categories when creating new note
 
 ### In Progress
 
-- [ ] Add logic to pre-populate primary and secondary categories when creating new note
 - [ ] Fix missing original notes
   - [ ] Dataview
   - [ ] Zettlekasten

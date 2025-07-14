@@ -17,5 +17,5 @@ CTRL + CLICK A TOPIC BELOW
 [[01 - Wireless Security]]
 
 
-Created Date: NaN
-Last Modified Date: NaN
+Created Date: <%+tp.file.creation_date("MMMM Do YYYY (HH:mm a)")%>
+Last Modified Date: <%+tp.file.creation_date("MMMM Do YYYY (HH:mm a)")%>
