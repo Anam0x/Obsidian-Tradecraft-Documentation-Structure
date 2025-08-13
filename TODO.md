@@ -22,7 +22,9 @@
   - [ ] Zettlekasten
 - [ ] Add style guide to root of vault
 - [ ] Provide installation instructions (either in README or in a scripts directory)
-  - [x] Instructions for modifying vault structure (i.e., primary/secondary categories, content types, templates)
+  - [ ] Content page for modifying vault structure (i.e., primary/secondary categories, content types, templates)
+    - [x] Instructions
+    - [ ] GIFs
   - [ ] Linux, Windows, macOS support (at the very least, a dedicated section in the README)
   - [ ] Automatically install, enable, configure required community plugins
 
