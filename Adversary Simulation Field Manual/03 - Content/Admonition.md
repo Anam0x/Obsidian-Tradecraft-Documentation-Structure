@@ -23,10 +23,10 @@ Adds admonition block-styled content to Obsidian.md, styled after [Material for 
 	* [[Obsidian - Plugins#Additional]]
 
 ## Configuration
-1. Nothing required beyond installation for default admonition block element display
-2. Would recommend enabling the 
-	1. 'copy' button permitting the copying of content directly from the blocks 
-	
+
+* Nothing required beyond installation for default admonition block element display
+* Would recommend enabling the 'copy' button permitting the copying of content directly from the blocks
+
 ___
 
 ## Resources:

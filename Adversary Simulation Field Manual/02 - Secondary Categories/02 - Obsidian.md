@@ -12,6 +12,8 @@ type: Secondary Category
 ## Getting Started
 * [[Obsidian - Getting Started]]
 * [[Obsidian - Linking Content]]
+* [[Obsidian - Modifying Vault Structure]]
+* [[Zettlekasten]]
 
 ## Customization
 * [[Obsidian - Plugins]]
@@ -19,8 +21,10 @@ type: Secondary Category
 
 ## Plugins
 * [[Admonition]]
+* [[Dataview]]
 * [[Templater]]
 * [[Obsidian Git]]
+* [[Emoji Toolbar]]
 
 *Created Date*: <%+tp.file.creation_date("MMMM Do YYYY (HH:mm a)")%>
 *Last Modified Date*: <%+tp.file.last_modified_date("MMMM Do YYYY (HH:mm a)")%>

@@ -1,21 +1,30 @@
 ### Todo
 
-- [ ] Provide installation instructions (either in README or in a scripts directory)
-  - [ ] Linux, Windows, macOS support (at the very least, a dedicated section in the README)
-  - [ ] Automatically install, enable, configure required community plugins
+- [ ] Add "special tags" for primary category titles; secondary categories should not be necessary
+  - [ ] Update "Obsidian - Modifying Vault Structure" note to reflect changes
 - [ ] git support
   - [ ] .gitignore
   - [ ] Setup instructions added to README
 - [ ] Add Python script to scrape MITRE ATT&CK Framework and generate TTP notes
-- [ ] Add logic to pre-populate primary and secondary categories when creating new note
-- [ ] Add logic to create new content type (e.g., "TTP", "Tool", "Basic")
+- [ ] Add more scripting logic
+  - [ ] Prompt to pre-populate tags and aliases for all new categories and content notes
+  - [ ] Prompt to pre-populate metadata links in new secondary categories with primary categories
+  - [ ] Prompt to pre-populate metadata links in new content notes with primary and secondary categories
+  - [ ] Adding and removing content types (e.g., "TTP", "Tool", "Basic")
+- [ ] Primary category ideas
+  - [ ] Social Engineering
 
 ### In Progress
 
 - [ ] Fix missing original notes
   - [x] Dataview
+  - [ ] Emoji Toolbar
   - [ ] Zettlekasten
 - [ ] Add style guide to root of vault
+- [ ] Provide installation instructions (either in README or in a scripts directory)
+  - [x] Instructions for modifying vault structure (i.e., primary/secondary categories, content types, templates)
+  - [ ] Linux, Windows, macOS support (at the very least, a dedicated section in the README)
+  - [ ] Automatically install, enable, configure required community plugins
 
 ### Done ✓
 

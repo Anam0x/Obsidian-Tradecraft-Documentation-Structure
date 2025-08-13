@@ -51,7 +51,6 @@ async function getNoteStruct(noteTag) {
 			destination: "01 - Primary Categories/",
 			metadata: "[[04 - Templates/04 - Primary Category/0401 - Metadata]]",
 			body: "[[04 - Templates/04 - Primary Category/0402 - Body]]"
-
 		};
 	} else if (noteTag.startsWith("Secondary")) {
 		noteStructConfig = {
