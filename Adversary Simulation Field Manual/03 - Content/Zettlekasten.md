@@ -15,9 +15,11 @@ type: Basic
 ***
 ## Resources:
 
-| Hyperlink | Info |
-| --------- | ---- |
-|           |      |
+| Hyperlink                                                                                                                                                                                       | Info                      |
+| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------- |
+| ["The Zettelkasten Method" by *abramdemski*](https://www.lesswrong.com/posts/NfdHG6oHBJ8Qxc26s/the-zettelkasten-method-1)                                                                       |                           |
+| ["The Zettelkasten Method: How to Take Smart Notes" by *Al*](https://web.archive.org/web/20200608031032/https://improveism.com/zettelkasten-method-smart-notes/)                                | (Wayback Machine Archive) |
+| ["Zettelkasten -- How One German Scholar Was So Freakishly Productive" by *David B. Clear*](https://web.archive.org/web/20200608031032/https://improveism.com/zettelkasten-method-smart-notes/) | (Wayback Machine Archive) |
 
 [^1]: 
 

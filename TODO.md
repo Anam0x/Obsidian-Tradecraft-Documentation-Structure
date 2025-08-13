@@ -6,14 +6,14 @@
 - [ ] git support
   - [ ] .gitignore
   - [ ] Setup instructions added to README
-- [ ] Testing script (necessary?)
 - [ ] Add Python script to scrape MITRE ATT&CK Framework and generate TTP notes
 - [ ] Add logic to pre-populate primary and secondary categories when creating new note
+- [ ] Add logic to create new content type (e.g., "TTP", "Tool", "Basic")
 
 ### In Progress
 
 - [ ] Fix missing original notes
-  - [ ] Dataview
+  - [x] Dataview
   - [ ] Zettlekasten
 - [ ] Add style guide to root of vault
 

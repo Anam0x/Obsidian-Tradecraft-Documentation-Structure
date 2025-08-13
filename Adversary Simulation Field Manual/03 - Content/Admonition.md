@@ -31,11 +31,9 @@ ___
 
 ## Resources:
 
-| Hyperlink                                                                     | Info |
-| ----------------------------------------------------------------------------- | ---- |
-| [Admonition Github Repo](https://github.com/valentine195/obsidian-admonition) |      |
-
-[^1]: 
+| Hyperlink                                                                           | Info            |
+| ----------------------------------------------------------------------------------- | --------------- |
+| [Admonition GitHub Repository](https://github.com/valentine195/obsidian-admonition) | Main repository |
 
 ***
 
