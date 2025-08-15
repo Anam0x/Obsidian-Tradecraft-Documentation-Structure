@@ -30,9 +30,6 @@
 
 ### Highest Priority
 
-- [ ] Add "special tags" for primary category titles; secondary categories should not be necessary
-  - [ ] Update "Obsidian - Modifying Vault Structure" note to reflect changes
-
 - [ ] Rename "Debrief" to "Case Study" and optionally change emoji (a "case study" covers both personal reflection post-engagement and formal analysis of publicly referenceable attacks/incidents)
 
 ### Medium Priority
@@ -63,6 +60,11 @@
   - [ ] What should the difference between links in the "Resources" table and footnotes be?
 
 ## Done ✓
+
+- [x] Add "special tags" for primary category titles; secondary categories should not be necessary
+  - [x] Change currently tracked notes
+  - [x] Confirmed that future content/primary category emojis are supported tag options
+  - [x] Update templates to reflect changes
 
 - [x] Fix missing original notes
   - [x] Dataview

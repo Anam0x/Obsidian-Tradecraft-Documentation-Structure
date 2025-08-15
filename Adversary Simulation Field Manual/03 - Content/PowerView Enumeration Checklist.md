@@ -1,8 +1,9 @@
 ---
 aliases:
   - PowerView Cheat Sheet
+  - PowerView Checklist
 tags:
-  - ✅
+  - ✅Playbook
 primary categories:
   - "[[01 - Penetration Test]]"
   - "[[01 - Red Team]]"
@@ -449,7 +450,8 @@ Find-InterestingDomainShareFile -Include *.doc*, *.xls*, *.ppt*, *.csv, *.pdf, *
 ```
 
 ***
-## Resources:
+
+## Resources
 
 | Hyperlink                                                                                                                                | Info                                                         |
 | ---------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------ |

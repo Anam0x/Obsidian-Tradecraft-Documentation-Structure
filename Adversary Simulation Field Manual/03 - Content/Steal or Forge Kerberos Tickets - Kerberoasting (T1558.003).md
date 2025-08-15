@@ -3,7 +3,7 @@ aliases:
   - T1558.003
   - Kerberoasting
 tags:
-  - 📕
+  - 📕TTP
 primary categories:
   - "[[01 - Penetration Test]]"
   - "[[01 - Red Team]]"

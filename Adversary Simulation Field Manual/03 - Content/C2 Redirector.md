@@ -1,7 +1,7 @@
 ---
 aliases: 
 tags:
-  - 🏗️
+  - 🏗️Infrastructure
 primary categories:
   - "[[01 - Penetration Test]]"
   - "[[01 - Red Team]]"
@@ -63,7 +63,7 @@ Redirectors, like most C2 infrastructure, should be treated as disposable assets
 ![[c2-redirectors.drawio.png]]
 
 ***
-## Resources:
+## Resources
 
 | Hyperlink                                                                                                                                                                   | Info                                                                                                                                        |
 | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |

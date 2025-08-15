@@ -1,7 +1,7 @@
 ---
 aliases: 
 tags:
-  - 📝
+  - 📝Basic
 primary categories:
   - "[[01 - Vault Administration]]"
 secondary categories:

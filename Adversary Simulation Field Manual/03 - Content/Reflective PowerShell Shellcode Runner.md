@@ -1,7 +1,8 @@
 ---
-aliases: 
+aliases:
+  - run.ps1
 tags:
-  - 💣
+  - 💣Payload
 primary categories:
   - "[[01 - Development]]"
   - "[[01 - Penetration Test]]"
@@ -112,7 +113,6 @@ $hThread = [System.Runtime.InteropServices.Marshal]::GetDelegateForFunctionPoint
 [System.Runtime.InteropServices.Marshal]::GetDelegateForFunctionPointer((LookupFunc kernel32.dll WaitForSingleObject), (getDelegateType @([IntPtr], [Int32]) ([Int]))).Invoke($hThread, 0xFFFFFFFF)
 ```
 
-***
 ## File Contents
 
 ### `run.ps1`
@@ -179,13 +179,12 @@ $hThread = [System.Runtime.InteropServices.Marshal]::GetDelegateForFunctionPoint
 ```
 
 ***
-## Resources:
+
+## Resources
 
 | Hyperlink                                                                              | Info                                     |
 | -------------------------------------------------------------------------------------- | ---------------------------------------- |
 | [_braaax_/`run.ps1`](https://gist.github.com/braaaax/41789bad5d07b8ba236299047a774ffa) | GitHub Gist page for payload by *braaax* |
-
-[^1]: 
 
 ***
 

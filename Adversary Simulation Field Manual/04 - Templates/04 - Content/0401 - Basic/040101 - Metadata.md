@@ -1,7 +1,7 @@
 ---
 aliases: 
 tags:
-  - 📝
+  - 📝Basic
 primary categories:
   - Add link(s) [[]] back to related PRIMARY categories
 secondary categories:

@@ -1,23 +1,24 @@
 ---
 aliases: 
 tags:
-  - 📝
+  - 📝Basic
 primary categories:
   - "[[01 - Vault Administration]]"
 secondary categories:
   - "[[02 - Obsidian]]"
 type: Basic
 ---
-# [[Admonition]]  
+# [[Admonition]]
+
 ***
 
-## Description:
+## Description
 
 Adds admonition block-styled content to Obsidian.md, styled after [Material for MkDocs](https://squidfunk.github.io/mkdocs-material/reference/admonitions/)
 
 ![](https://raw.githubusercontent.com/javalent/admonitions/master/publish/gifs/all.gif)
 
-## Installation:
+## Installation
 
 1. Admonition is a registered Obsidian plugin and can be installed directly from `Settings > Community Plugins > Browse`
 	* [[Obsidian - Plugins#Additional]]
@@ -29,7 +30,7 @@ Adds admonition block-styled content to Obsidian.md, styled after [Material for 
 
 ___
 
-## Resources:
+## Resources
 
 | Hyperlink                                                                           | Info            |
 | ----------------------------------------------------------------------------------- | --------------- |

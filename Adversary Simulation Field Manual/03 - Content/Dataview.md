@@ -1,7 +1,7 @@
 ---
 aliases: 
 tags:
-  - 📝
+  - 📝Basic
 primary categories:
   - "[[01 - Vault Administration]]"
 secondary categories:
@@ -10,14 +10,15 @@ type: Basic
 ---
 # [[Dataview]]
 ***
-## Description:
+
+## Description
 
 Creates dynamic views, tables, lists, and calendars by querying your notes' metadata, tags, links, and content.
 
-## Installation:
+## Installation
 
 1. Dataview is a registered Obsidian plugin and can be installed directly from `Settings > Community Plugins > Browse`
-	* [[Obsidian - Plugins#Additional]]
+	* [[Obsidian - Plugins#Required Plugins]]
 
 ## Configuration
 
@@ -36,10 +37,10 @@ Creates dynamic views, tables, lists, and calendars by querying your notes' meta
 
 ### Example Queries
 
-List all notes tagged with #🥇 :
+List all notes tagged with #🥇Primary_Category  :
 ```dataview
 LIST
-FROM #🥇
+FROM #🥇Primary_Category 
 ```
 
 Table of primary categories with dates:
@@ -56,7 +57,7 @@ WHERE due >= date(today) AND due <= date(today) + dur(1 week)
 ```
 
 ***
-## Resources:
+## Resources
 
 | Hyperlink                                                                                       | Info                   |
 | ----------------------------------------------------------------------------------------------- | ---------------------- |

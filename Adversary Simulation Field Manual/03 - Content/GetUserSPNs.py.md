@@ -2,7 +2,7 @@
 aliases:
   - impacket-GetUserSPNs
 tags:
-  - ⛏️
+  - ⛏️Tool
   - T1558003
 primary categories:
   - "[[01 - Red Team]]"
@@ -17,6 +17,7 @@ type: Tool
 # [[GetUserSPNs.py]]
 
 ***
+
 ## Overview
 
 [`GetUserSPNs.py`](https://github.com/fortra/impacket/blob/master/examples/GetUserSPNs.py) is a tool from the [Impacket](https://github.com/fortra/impacket) [Python](https://www.python.org/) module collection that automates [kerberoasting](https://attack.mitre.org/techniques/T1558/003/) attacks against user accounts associated with [service principal names (SPNs)](https://learn.microsoft.com/en-us/windows/win32/ad/service-principal-names) in [Active Directory (AD)](https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/get-started/virtual-dc/active-directory-domain-services-overview)[^1][^2]. If the service account password used to encrypt the returned [ticket-granting service (TGS)](https://csrc.nist.gov/glossary/term/tgs) ticket is weak, an attacker can recover its plaintext password by cracking the TGS hash output from `GetUserSPNs.py`.
@@ -142,7 +143,7 @@ connection:
 ```
 
 ***
-## Resources:
+## Resources
 
 | Hyperlink                                                                                        | Info                                                   |
 | ------------------------------------------------------------------------------------------------ | ------------------------------------------------------ |

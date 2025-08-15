@@ -1,7 +1,7 @@
 ---
 aliases: 
 tags:
-  - 📝
+  - 📝Basic
 primary categories:
   - "[[01 - Vault Administration]]"
 secondary categories:
@@ -9,8 +9,10 @@ secondary categories:
 type: Basic
 ---
 # [[Obsidian - Custom CSS]]  
+
 ***
-## Enabling Custom CSS Snippets:
+
+## Enabling Custom CSS Snippets
 
 To enable custom styling within Obsidian, you'll need to:
 1. Create the associated 'snippets' folder within the obsidian vault filestructure. This folder can be created by going to `Settings > Appearences` and clicking on the folder icon (far right) shown below. This folder will be created within the `$VAULTPATH/.obsidian/` directory. 
@@ -28,7 +30,7 @@ To enable custom styling within Obsidian, you'll need to:
 
 
 
-## Snippet Library:
+## Snippet Library
 
 ### 1. Colorized Graph Nodes
 
@@ -249,13 +251,11 @@ Attempt to make externally embedded content  more responsive
 
 ___
 
-## Resources:
+## Resources
 
 | Hyperlink                                                                | Info                                         |
 | ------------------------------------------------------------------------ | -------------------------------------------- |
 | [Obsidian Forums Showcase](https://forum.obsidian.md/c/share-showcase/9) | The source for several of the above snippets |
-
-[^1]: 
 
 ***
 

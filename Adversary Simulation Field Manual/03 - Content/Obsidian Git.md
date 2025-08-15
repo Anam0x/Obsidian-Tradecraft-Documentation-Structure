@@ -1,7 +1,7 @@
 ---
 aliases: 
 tags:
-  - 📝
+  - 📝Basic
 primary categories:
   - "[[01 - Vault Administration]]"
 secondary categories:
@@ -9,12 +9,14 @@ secondary categories:
 type: Basic
 ---
 # [[Obsidian Git]]
+
 ***
-## Description:
+
+## Description
 
 Simple plugin that allows you to backup your [Obsidian.md](https://obsidian.md) vault to a remote git repository (e.g. private repo on GitHub). This plugin assumes you have existing git repository initialized locally and credentials are setup. This is the mechanism by which all your notes are sync'd to the Offpipe repository and shared between consultants. 
 
-## Installation:
+## Installation
 
 1. Obsidian Git is a registered Obsidian plugin and and can be installed directly from `Settings > Community Plugins > Browse`
 	* [[Obsidian - Plugins#Required]]
@@ -45,13 +47,11 @@ These commands can be added to hotkey combinations which greatly simply the addo
 
 ___
 
-## Resources:
+## Resources
 
 | Hyperlink                                                             | Info |
 | --------------------------------------------------------------------- | ---- |
 | [Obsidian Git Github Repo](https://github.com/denolehov/obsidian-git) |      |
-
-[^1]: 
 
 ***
 

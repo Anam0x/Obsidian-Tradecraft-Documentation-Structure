@@ -1,7 +1,7 @@
 ---
 aliases: 
 tags:
-  - 📝
+  - 📝Basic
 primary categories:
   - "[[01 - Vault Administration]]"
 secondary categories:
@@ -35,11 +35,11 @@ The following emojis are currently used as special search tags for notes:
 * Primary Categories:
 	* ☁️ - Cloud Security
 	* 🛠️ - Development
-	* 🔍 - Penetration Test
+	* 🎯 - Penetration Test
 	* 🔓 - Physical Security
 	* 🔴 - Red Team
 	* ✍️ - Reporting
-	* 👨‍🎓 - Training
+	* 🎒 - Training
 	* 🏦 - Vault Administration
 	* 🌐 - Web Application Security
 	* 📶 - Wireless Security
@@ -60,7 +60,7 @@ The following emojis are currently used as special search tags for notes:
 	* 🔵 - Detection Engineering
 	* 😈 - Threat Intelligence
 	* 📱 - Mobile Security
-	* 🕵️‍♂️ - OSINT
+	* 🔍 - OSINT
 	* 🔐 - Cryptography
 * Future Content Ideas:
 	* 💡 - Idea

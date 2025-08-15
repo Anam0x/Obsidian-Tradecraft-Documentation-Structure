@@ -1,7 +1,7 @@
 ---
 aliases: 
 tags:
-  - ⌛
+  - ⌛Debrief
 primary categories:
   - "[[01 - Training]]"
 secondary categories:
@@ -70,7 +70,7 @@ Initial access was achieved by exploiting a vulnerable WordPress plugin that per
 * [x] Add SSH lateral movement checklist to internal Playbook template
 
 ***
-## Resources:
+## Resources
 
 | Hyperlink                                                      | Info                             |
 | -------------------------------------------------------------- | -------------------------------- |

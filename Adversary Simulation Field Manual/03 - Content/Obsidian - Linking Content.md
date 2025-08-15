@@ -1,7 +1,7 @@
 ---
 aliases: 
 tags:
-  - 📝
+  - 📝Basic
 primary categories:
   - "[[01 - Vault Administration]]"
 secondary categories:
@@ -9,7 +9,9 @@ secondary categories:
 type: Basic
 ---
 # [[Obsidian - Linking Content]]  
+
 ***
+
 ## Description
 
 1. Within Obsidian, links are the means by which data is structured and relationships are drawn. 
@@ -58,13 +60,11 @@ If you're using included CSS snippets nonexistant nodes become a bit more visabl
 
 ***
 
-## Resources:
+## Resources
 
 | Hyperlink | Info |
 | --------- | ---- |
 |           |      |
-
-[^1]: 
 
 ***
 

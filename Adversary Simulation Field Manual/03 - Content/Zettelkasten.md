@@ -2,7 +2,7 @@
 aliases:
   - Slip-Box
 tags:
-  - 📝
+  - 📝Basic
 primary categories:
   - "[[01 - Training]]"
 secondary categories:
