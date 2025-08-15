@@ -1,26 +1,54 @@
-### Todo
+# Todo
+
+## Not Started
+
+- [ ] Figure out what to do with seemingly obsolete "Header" template structure element
+
+- [ ] Add designated section for unfinished ideas (reintroduce the "Personal" directory?)
+
+- [ ] Add Python script to scrape MITRE ATT&CK Framework and generate TTP notes
+
+- [ ] Primary category ideas
+  - [ ] Social Engineering (theater mask emoji as the special search tag)
+  - [ ] OS Internals (gear)
+  - [ ] Purple Team (purple circle)
+  - [ ] Detection Engineering (blue circle)
+  - [ ] Threat Intelligence (smiling imp with horns)
+  - [ ] Mobile Security (cellphone)
+  - [ ] OSINT (detective)
+  - [ ] Cryptography (secured lock with key)
+
+- [ ] Content type ideas
+  - [ ] Idea (bulb)
+  - [ ] Biography (silhouette)
+  - [ ] Vulnerability (hole)
+  - [ ] IOC (red alert)
+  - [ ] Lab Setup (test tube)
+  - [ ] Command (dollar sign)
+
+## In Progress
+
+### Highest Priority
 
 - [ ] Add "special tags" for primary category titles; secondary categories should not be necessary
   - [ ] Update "Obsidian - Modifying Vault Structure" note to reflect changes
-- [ ] git support
-  - [ ] .gitignore
-  - [ ] Setup instructions added to README
-- [ ] Add Python script to scrape MITRE ATT&CK Framework and generate TTP notes
+
+- [ ] Rename "Debrief" to "Case Study" and optionally change emoji (a "case study" covers both personal reflection post-engagement and formal analysis of publicly referenceable attacks/incidents)
+
+### Medium Priority
+
 - [ ] Add more scripting logic
   - [ ] Prompt to pre-populate tags and aliases for all new categories and content notes
   - [ ] Prompt to pre-populate metadata links in new secondary categories with primary categories
   - [ ] Prompt to pre-populate metadata links in new content notes with primary and secondary categories
   - [ ] Adding and removing content types (e.g., "TTP", "Tool", "Basic")
-- [ ] Primary category ideas
-  - [ ] Social Engineering
 
-### In Progress
+- [ ] git support
+  - [ ] .gitignore
+  - [ ] Setup instructions added to README
 
-- [ ] Fix missing original notes
-  - [x] Dataview
-  - [ ] Emoji Toolbar
-  - [ ] Zettlekasten
-- [ ] Add style guide to root of vault
+### Lowest Priority
+
 - [ ] Provide installation instructions (either in README or in a scripts directory)
   - [ ] Content page for modifying vault structure (i.e., primary/secondary categories, content types, templates)
     - [x] Instructions
@@ -28,7 +56,18 @@
   - [ ] Linux, Windows, macOS support (at the very least, a dedicated section in the README)
   - [ ] Automatically install, enable, configure required community plugins
 
-### Done ✓
+- [ ] Consider replacing `PowerView Enumeration Checklist` with a single `PowerView - Enumerate Users` note to maintain principle of atomicity
+
+- [ ] Add style guide to root of vault
+  - [ ] Split up the style guide into atomic notes
+  - [ ] What should the difference between links in the "Resources" table and footnotes be?
+
+## Done ✓
+
+- [x] Fix missing original notes
+  - [x] Dataview
+  - [x] Emoji Toolbar
+  - [x] Zettlekasten
 
 - [x] Create example categories and content
   - [x] Basic

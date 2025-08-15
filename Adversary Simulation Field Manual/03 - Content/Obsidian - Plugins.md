@@ -9,23 +9,28 @@ secondary categories:
 type: Basic
 ---
 # [[Obsidian - Plugins]]  
+
 ***
-## Required
+
+## Required Plugins
+
 [[Obsidian Git]]  
 [[Templater]]  
+[[Dataview]]
+[[Admonition]]
+[[Emoji Toolbar]]
 
-## Additional
-[[Dataview]] 
-[[Admonition]]  
+## Optional Plugins
+
+No plugins are considered optional at this time.
 
 ___
 
-## Resources:
+## Resources
 
-| Hyperlink | Info |
-| --------- | ---- |
-
-[^1]: 
+| Hyperlink                                                                                                                           | Info                                                                                                                   |
+| ----------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| [*Obsidian, Taming a Collective Consciousness* by Sam Link](https://trustedsec.com/blog/obsidian-taming-a-collective-consciousness) | Example implementation of Zettelkasten using Obsidian; discusses the importance of multiple community Obsidian plugins |
 
 ***
 

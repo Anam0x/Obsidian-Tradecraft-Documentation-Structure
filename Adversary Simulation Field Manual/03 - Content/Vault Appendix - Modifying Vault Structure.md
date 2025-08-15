@@ -8,8 +8,10 @@ secondary categories:
   - "[[02 - Obsidian]]"
 type: Basic
 ---
-# [[Obsidian - Modifying Vault Structure]]
+# [[Vault Appendix - Modifying Vault Structure]]
+
 ***
+
 ## Overview
 
 This note covers instructions for how to add primary/secondary categories, content types, and their respective templates. In future releases of this project, I hope to add logic either internally to Obsidian or as external scripts to automate this behavior safely.
@@ -62,7 +64,7 @@ Removing primary and/or secondary categories is as simple as right-clicking the 
 
 ### Changing Category Hierarchy
 
-Primary and secondary categories are critical elements of this vault structure, so it is unlikely that their role will ever be removed entirely from this vault. Adding subsequent category roles (e.g., tertiary, quaternary, etc.) risks adding excessive parent/child relationships to the vault—which is somewhat antithetical to the minimally hierarchical [[Zettlekasten]] technique that this vault is based on—and is therefore advised against.
+Primary and secondary categories are critical elements of this vault structure, so it is unlikely that their role will ever be removed entirely from this vault. Adding subsequent category roles (e.g., tertiary, quaternary, etc.) risks adding excessive parent/child relationships to the vault—which is somewhat antithetical to the minimally hierarchical [[Zettelkasten]] technique that this vault is based on—and is therefore advised against.
 
 If users of this vault still choose to pursue either or both of these scenarios however, the former can be achieved by removing references to the unwanted category type in [[0400 - Gen_Note]], deleting its `04 - Templates` sub-directory, and updating notes that link to primary/secondary categories manually. The latter can be achieved by creating a new directory to house new category types (ideally after `02 - Secondary Categories`, which would require incrementing all references to `03 - Content` and `04 - Templates`), updating [[0400 - Gen_Note]] to present a new category option and load new template structures, and finally creating said template structures for the new category.
 
