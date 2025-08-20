@@ -15,6 +15,9 @@ async function setNoteType() {
             "Select note type (required):"
         );
         // If null/undefined, loop continues
+        if (!selectedNoteType) {
+	        new Notice("Note type selection is required to continue");
+	    }
     }
     return selectedNoteType;
 }
@@ -22,31 +25,31 @@ async function setNoteType() {
 // Name: setTitle
 // Description: Ensure a valid title is supplied, or prompt user for title.
 // Rename the created file from "Untitled" to what they've supplied.
-async function setTitle(title, noteType, destinationDirectory) {
+async function setTitle(title, noteType) {
     let destinationPath;
     let promptText;
     
     switch(noteType) {
         case "Primary":
-            destinationPath = destinationDirectory + "/01 - " + title + ".md";
+            destinationPath = "01 - Primary Categories/01 - " + title + ".md";
             promptText = "Title of New Primary Category";
             break;
         case "Secondary":
-            destinationPath = destinationDirectory + "/02 - " + title + ".md";
+            destinationPath = "02 - Secondary Categories/02 - " + title + ".md";
             promptText = "Title of New Secondary Category";
             break;
         case "Content":
-            destinationPath = destinationDirectory + "/" + title + ".md";
+            destinationPath = "03 - Content/" + title + ".md";
             promptText = "Title of New Content/Atomic Note";
             break;
     }
     
-    if (await isValidTitle(title, noteType, destinationPath)) {
+    if (await isValidTitle(title, destinationPath)) {
         console.log(`Title: "${title}" is valid`);
         return title;
     } else {
         const newTitle = await tp.system.prompt(promptText);
-        return await setTitle(newTitle, noteType, destinationDirectory);
+        return await setTitle(newTitle, noteType);
     }
 }
 
@@ -56,15 +59,17 @@ async function setTitle(title, noteType, destinationDirectory) {
 // the default naming scheme of 'Untitled #' - rejects assignment of any of these 
 // cases. Also checks for duplicates in destination directory.
 // Return: Boolean
-async function isValidTitle(title, noteType, destinationPath) {
+async function isValidTitle(title, destinationPath) {
     const noteExists = await tp.file.exists(destinationPath);
-
+    
     // If nothing was supplied, try again
     if (typeof title === 'undefined' || (typeof title === 'string' && title.includes('Untitled')) || title === null || title === "") {
+        new Notice("Provide a distinct note title to continue");
         return false;
     } 
     // If duplicate exists in destination directory, try again
     else if (noteExists === true) {
+	    new Notice("A note with this title already exists in the destination directory");
         return false;
     }
     
@@ -74,6 +79,7 @@ async function isValidTitle(title, noteType, destinationPath) {
 // Name: getAllUsedEmojis
 // Description: Scans all Notes in the vault to find emojis already in use as Search Tags
 // Returns: Set of used emojis
+// TODO: Figure out why this is not working; most likely the emojiMatch regex
 async function getAllUsedEmojis() {
     const usedEmojis = new Set();
     
@@ -105,113 +111,6 @@ async function getAllUsedEmojis() {
     reservedEmojis.forEach(emoji => usedEmojis.add(emoji));
     
     return usedEmojis;
-}
-
-// Name: getEmojisFromExternalSource
-// Description: Load ALL emojis from configuration file, regardless of section
-// Returns: Object with display names and emoji values
-async function getEmojisFromExternalSource() {
-    const configPath = "04 - Templates/emoji-config.md";
-    
-    try {
-        const configFile = app.vault.getAbstractFileByPath(configPath);
-        if (!configFile) {
-            // Create default config file
-            await createEmojiConfigFile(configPath);
-            return await getEmojisFromExternalSource(); // Recursive call after creation
-        }
-        
-        const content = await app.vault.read(configFile);
-        const emojis = {};
-        
-        // Parse ALL emoji lines from the config file, ignoring section headers
-        const lines = content.split('\n');
-        lines.forEach(line => {
-            const match = line.match(/^\s*([^\|\s]+)\s*\|\s*(.+)\s*$/);
-            if (match) {
-                const emoji = match[1].trim();
-                const description = match[2].trim();
-                // Skip lines that look like section headers or warnings
-                if (!line.includes('#') && !line.includes('>') && !line.includes('*')) {
-                    emojis[`${emoji} ${description}`] = emoji;
-                }
-            }
-        });
-        
-        return emojis;
-    } catch (error) {
-        console.log("Error loading emoji config:", error);
-        // Fallback to basic emojis
-        return {
-            "🔥 Fire": "🔥",
-            "⚡ Lightning": "⚡", 
-            "🎯 Target": "🎯",
-            "🔒 Lock": "🔒",
-            "🛡️ Shield": "🛡️"
-        };
-    }
-}
-
-// Name: getSmartEmojiSuggestions
-// Description: Provides intelligent emoji suggestions based on name and context
-async function getSmartEmojiSuggestions(name, type = "content") {
-    const nameLC = name.toLowerCase();
-    
-    // Smart suggestions based on keywords
-    const smartSuggestions = [];
-    const keywordMap = {
-        // Attack/Offensive
-        "payload|exploit|attack|hack|malware|virus": "💣",
-        "phishing|social|email": "🎣",
-        "brute|force|crack": "🔨",
-        "injection|sqli|xss": "💉",
-        "shell|reverse|bind": "🐚",
-        
-        // Defense/Security  
-        "defense|protect|secure|shield": "🛡️",
-        "firewall|block|filter": "🧱",
-        "encryption|crypto|cipher": "🔐",
-        "authentication|auth|login": "🔑",
-        "monitoring|alert|watch": "👁️",
-        
-        // Analysis/Intelligence
-        "report|analysis|intel": "📊",
-        "scan|enum|recon": "🔍",
-        "research|study|learn": "📚",
-        "documentation|doc|guide": "📝",
-        "log|event|audit": "📋",
-        
-        // Network/Infrastructure
-        "network|lan|wan|subnet": "🌐",
-        "wireless|wifi|radio": "📶",
-        "domain|dns|url": "🔗",
-        "server|host|machine": "🖥️",
-        "database|db|sql": "🗄️",
-        
-        // Tools/Utilities
-        "tool|utility|script": "🔧",
-        "framework|platform|env": "⚙️",
-        "config|setting|param": "⚙️",
-        "automation|auto|batch": "🤖",
-        "backup|archive|save": "💾"
-    };
-    
-    // Find matching suggestions
-    for (const [keywords, emoji] of Object.entries(keywordMap)) {
-        if (keywords.split('|').some(keyword => nameLC.includes(keyword))) {
-            smartSuggestions.push({
-                emoji: emoji,
-                reason: `Suggested for "${name}"`
-            });
-        }
-    }
-    
-    // Remove duplicates
-    const uniqueSuggestions = smartSuggestions.filter((item, index, self) => 
-        index === self.findIndex(t => t.emoji === item.emoji)
-    );
-    
-    return uniqueSuggestions.slice(0, 3); // Top 3 suggestions
 }
 
 // Name: getCategorizedEmojis  
@@ -250,8 +149,8 @@ function getCategorizedEmojis() {
             {emoji: "📋", desc: "Checklist/Audit"},
             {emoji: "📝", desc: "Documentation"},
             {emoji: "📚", desc: "Research/Learn"},
-            {emoji: "🧠", desc: "Intelligence"},
-            {emoji: "😈", desc: "Threat Actor/Criminal"}
+            {emoji: "🧠", desc: "Brain/Intelligence"},
+            {emoji: "😈", desc: "Threat Actor"}
         ],
         "🌐 Network & Infrastructure": [
             {emoji: "🌐", desc: "Network/Web"},
@@ -274,19 +173,30 @@ function getCategorizedEmojis() {
             {emoji: "💲", desc: "Dollar Sign/Command"}
         ],
         "➕ Miscellaneous": [
-            {emoji: "💡", desc: "Idea"},
+            {emoji: "💡", desc: "Light Bulb/Idea"},
             {emoji: "🏦", desc: "Bank/Vault"},
             {emoji: "👤", desc: "Silhouette/Person"},
             {emoji: "🕳️", desc: "Hole/Vulnerability"},
             {emoji: "👣", desc: "Footprint/Clue"},
-            {emoji: "🧪", desc: "Test Tube/Lab"}
+            {emoji: "🧪", desc: "Test Tube/Lab"},
+            {emoji: "💀", desc: "Skull"},
+            {emoji: "📡", desc: "Satellite"},
+            {emoji: "⌨️", desc: "Keyboard"},
+            {emoji: "🖱️", desc: "Mouse"},
+            {emoji: "💿", desc: "CD"},
+            {emoji: "🔌", desc: "Electric Plug"},
+            {emoji: "🔬", desc: "Microscope"},
+            {emoji: "🔭", desc: "Telescope"},
+            {emoji: "⚖️", desc: "Balance Scale"},
+            {emoji: "🔗", desc: "Link"},
+            {emoji: "🌍", desc: "Earth Globe Europe-Africa"}
         ]
     };
 }
 
 // Name: smartEmojiSelector
 // Description: Main function for intelligent emoji selection
-async function smartEmojiSelector(name, type = "content") {
+async function smartEmojiSelector(name) {
     const usedEmojis = await getAllUsedEmojis();
     
     // Build selection options - only categorized emojis
@@ -325,7 +235,8 @@ async function smartEmojiSelector(name, type = "content") {
     );
     
     if (!selection) {
-        return "📁"; // Fallback
+	    new Notice(`Search tag selection failed; using 📁 as fallback search tag`);
+        return "📁";
     }
     
     // Handle special selections
@@ -341,49 +252,32 @@ async function smartEmojiSelector(name, type = "content") {
     
     return selection;
 }
-// Name: getAvailableEmojisWithManualEntry
-// Description: Gets available emojis with manual entry option
-// Returns: Object with display names and emoji values, plus manual entry option
-async function getAvailableEmojisWithManualEntry() {
-    const configEmojis = await getEmojisFromExternalSource();
-    const usedEmojis = await getAllUsedEmojis();
-    
-    // Filter out used emojis
-    const availableEmojis = {};
-    Object.entries(configEmojis).forEach(([name, emoji]) => {
-        if (!usedEmojis.has(emoji)) {
-            availableEmojis[name] = emoji;
-        }
-    });
-    
-    // Add manual entry option
-    availableEmojis["✏️ Enter emoji manually"] = "MANUAL_ENTRY";
-    
-    return availableEmojis;
-}
 
 // Name: handleManualEmojiEntry
 // Description: Handles manual emoji entry with validation
 // Returns: Validated emoji string
 async function handleManualEmojiEntry() {
-    const manualEmoji = await tp.system.prompt("Enter emoji character (paste from system emoji picker):");
-    
-    if (!manualEmoji) {
-        throw new Error("No emoji provided");
-    }
-    
-    // Basic validation - check if it looks like an emoji
+	let manualEmoji = null;
+	
+	// Basic validation - check if it looks like an emoji
     const emojiRegex = /[\u{1F600}-\u{1F64F}]|[\u{1F300}-\u{1F5FF}]|[\u{1F680}-\u{1F6FF}]|[\u{1F1E0}-\u{1F1FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]/u;
     
-    if (!emojiRegex.test(manualEmoji)) {
-        const retry = await tp.system.prompt("That doesn't look like an emoji. Try again? (y/n)");
-        if (retry?.toLowerCase() === 'y') {
-            return await handleManualEmojiEntry();
-        }
-        throw new Error("Invalid emoji provided");
+    while (!manualEmoji) {
+        manualEmoji = await tp.system.prompt("Enter emoji character (paste from system emoji picker):");
+        // If null/undefined/invalid, loop continues
+        if (!manualEmoji || !emojiRegex.test(manualEmoji)) {
+	        const retry = await tp.system.prompt("That doesn't look like an emoji. Try again? (y/n)");
+	        if (retry?.toLowerCase() === 'y') {
+	            continue;
+	        }
+	        new Notice(`Manual entry failed; using 📁 as fallback search tag`);
+	        return "📁";
+	    }
     }
     
     // Check if already in use
+    // TODO: Emoji search is not working, troubleshoot before attempting to enforce emoji uniqueness
+    /*
     const usedEmojis = await getAllUsedEmojis();
     if (usedEmojis.has(manualEmoji)) {
         const retry = await tp.system.prompt(`Emoji ${manualEmoji} is already in use. Try another? (y/n)`);
@@ -392,75 +286,9 @@ async function handleManualEmojiEntry() {
         }
         throw new Error("Emoji already in use");
     }
+    */
     
     return manualEmoji;
-}
-
-// Name: selectEmojiForCategory
-// Description: Presents emoji selection with manual entry option for categories
-// Returns: Selected emoji string
-async function selectEmojiForCategory() {
-    const emojis = await getAvailableEmojisWithManualEntry();
-    
-    const emojiNames = Object.keys(emojis);
-    const emojiValues = Object.values(emojis);
-    
-    const availableCount = emojiNames.length - 1; // Subtract 1 for manual entry option
-    const promptText = `Select an emoji for this primary category (${availableCount} available + manual entry):`;
-    
-    const selectedValue = await tp.system.suggester(
-        emojiNames,
-        emojiValues,
-        false,
-        promptText
-    );
-    
-    if (!selectedValue) {
-        return "📁"; // Fallback if user cancels
-    }
-    
-    // Handle manual entry
-    if (selectedValue === "MANUAL_ENTRY") {
-        try {
-            return await handleManualEmojiEntry();
-        } catch (error) {
-            new Notice(`Manual entry failed: ${error.message}`);
-            return "📁"; // Fallback
-        }
-    }
-    
-    return selectedValue;
-}
-
-// Name: selectEmojiForContentType
-// Description: Presents emoji selection for new content types with manual entry option
-// Returns: Selected emoji string
-async function selectEmojiForContentType(contentTypeName) {
-    const emojis = await getAvailableEmojisWithManualEntry();
-    
-    const emojiNames = Object.keys(emojis);
-    const emojiValues = Object.values(emojis);
-    
-    const availableCount = emojiNames.length - 1; // Subtract 1 for manual entry option
-    const promptText = `Select emoji for ${contentTypeName} (${availableCount} available + manual entry):`;
-    
-    const selectedValue = await tp.system.suggester(
-        emojiNames,
-        emojiValues,
-        false,
-        promptText
-    );
-    
-    if (!selectedValue) {
-        throw new Error("Emoji selection is required for new content type");
-    }
-    
-    // Handle manual entry
-    if (selectedValue === "MANUAL_ENTRY") {
-        return await handleManualEmojiEntry();
-    }
-    
-    return selectedValue;
 }
 
 // Name: getPrimaryCategories
@@ -624,29 +452,32 @@ async function setContentType() {
     // Add existing Content Types with emoji display
     availableTypes.forEach(type => {
         options.push(type);
-        displayOptions.push(type.displayName); // Now includes emoji: "💣 Payload (0402)"
+        displayOptions.push(type.displayName); // Now includes emoji: "💣 (Payload)"
     });
     
     // Add "Create New Content Type" option
     options.push("NEW_CONTENT_TYPE");
     displayOptions.push("➕ Create New Content Type");
-    
-    const selection = await tp.system.suggester(
-        displayOptions,
-        options,
-        false,
-        "Select Content Type or create new one:"
-    );
-    
-    if (!selection) {
-        throw new Error("Content Type selection is required");
+
+	let selectedContentType = null;
+	while (!selectedContentType) {
+        selectedContentType = await tp.system.suggester(
+	        displayOptions,
+	        options,
+	        false,
+	        "Select Content Type or create new one:"
+	    );
+        // If null/undefined, loop continues
+        if (!selectedContentType) {
+	        new Notice("Content type selection is required");
+        }
     }
     
-    if (selection === "NEW_CONTENT_TYPE") {
+    if (selectedContentType === "NEW_CONTENT_TYPE") {
         return await createNewContentType();
     }
     
-    return selection;
+    return selectedContentType;
 }
 
 // Name: getNextTemplateNumber
@@ -679,13 +510,17 @@ async function getNextTemplateNumber() {
 // Returns: Object with new Content Type configuration
 async function createNewContentType() {
     // Get the content type name
-    const contentTypeName = await tp.system.prompt("Enter name for new content type (e.g., 'Report', 'Research'):");
-    if (!contentTypeName) {
-        throw new Error("Content type name is required");
+    let contentTypeName = null;
+	while (!contentTypeName) {
+        contentTypeName = await tp.system.prompt("Enter name for new content type (e.g., 'Report', 'Research'):");
+        // If null/undefined, loop continues
+        if (!contentTypeName) {
+	        new Notice("Content type name is required");
+        }
     }
     
     // Get unique emoji for the Content Type
-    const selectedEmoji = await smartEmojiSelector(contentTypeName, "content");
+    const selectedEmoji = await smartEmojiSelector(contentTypeName);
     
     // Generate next available template number
     const templateNumber = await getNextTemplateNumber();
@@ -792,6 +627,7 @@ async function getNoteConfig(noteType, title, primaryCategories = [], secondaryC
     
     switch(noteType) {
         case "Primary":
+	        console.log("Primary");
             config.prefix = "01 - ";
             config.destination = "01 - Primary Categories/";
             config.metadataTemplate = "[[04 - Templates/04 - Primary Category/0401 - Metadata]]";
@@ -897,7 +733,6 @@ async function buildNote(config) {
 // Content Type - A general framework for building Content/Atomic Notes that leverages individualized template structures in the "04 - Templates/04 - Content" directory
 // Search Tag - A unique emoji postfixed with the Note title, replacing whitespace characters with underscore characters (e.g., "🥇Primary_Category", "✍️Reporting", or "💣Payload")
 
-let config;
 let noteContent = "";
 
 try {
@@ -910,14 +745,13 @@ try {
 	switch(noteType) {
 		case "Primary":
 			// 1.1. Primary Category workflow
-			const primaryDestination = "01 - Primary Categories";
             let primaryTitle = tp.file.title;
 
             // 1.1.1. Get valid title
-            primaryTitle = await setTitle(primaryTitle, noteType, primaryDestination);
+            primaryTitle = await setTitle(primaryTitle, noteType);
 	
             // 1.1.2. Get emoji for category
-            const categoryEmoji = await smartEmojiSelector(primaryTitle, "primary");
+            const categoryEmoji = await smartEmojiSelector(primaryTitle);
             
             // 1.1.3. Build config and create Note
             config = await getNoteConfig(noteType, primaryTitle, [], [], null, categoryEmoji);
@@ -925,11 +759,10 @@ try {
     
 		case "Secondary":
             // 1.2. Secondary Category workflow
-            const secondaryDestination = "02 - Secondary Categories";
             let secondaryTitle = tp.file.title;
 		
             // 1.2.1. Get valid title
-            secondaryTitle = await setTitle(secondaryTitle, noteType, secondaryDestination);
+            secondaryTitle = await setTitle(secondaryTitle, noteType);
             
             // 1.2.2. Select Primary Categories to link back to
             const linkedPrimaryCategories = await selectCategories("primary");
@@ -940,11 +773,10 @@ try {
             
 		case "Content":
             // 1.3. Content/Atomic Note workflow
-            const contentDestination = "03 - Content";
             let contentTitle = tp.file.title;
             
             // 1.3.1. Get valid title
-            contentTitle = await setTitle(contentTitle, noteType, contentDestination);
+            contentTitle = await setTitle(contentTitle, noteType);
             
             // 1.3.2. Select Content Type or create new one
             const selectedContentType = await setContentType();
