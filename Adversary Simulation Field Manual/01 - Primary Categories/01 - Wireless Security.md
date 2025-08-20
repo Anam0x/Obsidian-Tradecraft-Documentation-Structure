@@ -2,6 +2,7 @@
 aliases: 
 tags:
   - 🥇Primary_Category
+  - 📶Wireless_Security
 primary categories:
   - "[[000 - Global Index (Start Here!)]]"
 type: Primary Category
@@ -24,7 +25,7 @@ type: Primary Category
 
 ## Wireless Exploitation
 
-* [[02 - Social Engineering]]
+* [[02 - Evil Twin Attack]]
 * [[02 - Impersonation]]
 * [[02 - Wireless Attacks]]
 * [[02 - Password Attacks]]

@@ -34,41 +34,37 @@ The following emojis are currently used as special search tags for notes:
 	* 🥈 - Secondary Category
 * Primary Categories:
 	* ☁️ - Cloud Security
+	* 🗝️ - Cryptography
+	* 🛡️ - Detection Engineering
 	* 🛠️ - Development
+	* ⚙️ - OS Internals
+	* 🔍 - OSINT
 	* 🎯 - Penetration Test
 	* 🔓 - Physical Security
 	* 🔴 - Red Team
 	* ✍️ - Reporting
+	* 🎭 - Social Engineering
+	* 😈 - Threat Intelligence
 	* 🎒 - Training
 	* 🏦 - Vault Administration
 	* 🌐 - Web Application Security
 	* 📶 - Wireless Security
 *  Content:
 	* 📝 - Basic
-	* ⛏️ - Tool
-	* 📕 - Tactics, Techniques, Procedure (TTP)
-	* ✅ - Playbook
-	* 🗺️ - Mind Map
-	* ⌛ - Debrief
-	* 💣 - Payload
-	* 🏗️ - Infrastructure
-	* 🎓 - Study Resources
-* Future Primary Categories Ideas:
-	* ⚙️ - OS Internals
-	* 🎭 - Social Engineering
-	* 🟣 - Purple Team
-	* 🔵 - Detection Engineering
-	* 😈 - Threat Intelligence
-	* 📱 - Mobile Security
-	* 🔍 - OSINT
-	* 🔐 - Cryptography
-* Future Content Ideas:
-	* 💡 - Idea
 	* 👤 - Biography
-	* 🕳️ - Vulnerability
-	* 🚨 - IOC
-	* 🧪 - Lab Setup
+	* ⌛ - Case Study
 	* 💲 - Command
+	* 💡 - Idea
+	* 🏗️ - Infrastructure
+	* 👣 - IOC
+	* 🧪 - Lab Setup
+	* 🗺️ - Mind Map
+	* 💣 - Payload
+	* ✅ - Playbook
+	* 🎓 - Study Resources
+	* 📕 - Tactics, Techniques, Procedure (TTP)
+	* ⚔️ - Tool
+	* 🕳️ - Vulnerability
 
 ***
 

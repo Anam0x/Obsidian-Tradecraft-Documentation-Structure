@@ -2,7 +2,7 @@
 aliases:
   - impacket-GetUserSPNs
 tags:
-  - ⛏️Tool
+  - ⚔️Tool
   - T1558003
 primary categories:
   - "[[01 - Red Team]]"

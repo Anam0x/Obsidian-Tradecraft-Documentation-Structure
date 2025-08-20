@@ -33,7 +33,7 @@ type: Primary Category
 
 * [[02 - Client-Side Attacks]]
 * [[02 - Password Attacks]]
-* [[02 - Social Engineering]]
+* [[02 - Phishing]]
 
 ## Discovery
 

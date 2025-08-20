@@ -1,10 +1,10 @@
 ---
 aliases: 
 tags:
-  - ⚔️Tool
+  - ⌛Case_Study
 primary categories:
   - Add link(s) [[]] back to related PRIMARY categories
 secondary categories:
   - Add link(s) [[]] back to related SECONDARY categories
-type: Tool
+type: Case Study
 ---

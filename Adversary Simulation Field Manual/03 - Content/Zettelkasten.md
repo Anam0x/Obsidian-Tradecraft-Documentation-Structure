@@ -204,15 +204,16 @@ The core benefits of TrustedSec's approach—rapid content creation, network-bas
 
 Like any methodology, Zettelkasten has limitations alongside its strengths. The following table outlines common criticisms that can help inform whether this approach fits your workflow.
 
-| Criticism                       | Implication                                                                                            |
-| ------------------------------- | ------------------------------------------------------------------------------------------------------ |
-| High complexity & time cost     | Not feasible for casual or fast-paced workflows; requires long time commitment to see positive results |
-| Lack of standard format         | Hinders consistency and navigation                                                                     |
-| Steep learning curve            | Delayed productivity benefits                                                                          |
-| Over-reliance on links          | Risk of superficial understanding and cognitive bias                                                   |
-| Fragmentation without coherence | Loss of broader context or narrative and difficulty synthesizing notes                                 |
-| Tool dependency                 | Challenges in portability and system flexibility across platforms                                      |
-| Expensive storage               | Atomic notes build up over time, incurring storage costs                                               |
+| Criticism                       | Implication                                                                                              |
+| ------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| High complexity & time cost     | Not feasible for casual or fast-paced workflows; requires long time commitment to see positive results   |
+| Lack of standard format         | Hinders consistency and navigation                                                                       |
+| Steep learning curve            | Delayed productivity benefits                                                                            |
+| Over-reliance on links          | Risk of superficial understanding and cognitive bias                                                     |
+| Fragmentation without coherence | Loss of broader context or narrative and difficulty synthesizing notes                                   |
+| Tool dependency                 | Challenges in portability and system flexibility across platforms                                        |
+| Expensive storage               | Atomic notes build up over time, incurring storage costs                                                 |
+| Difficult team adoption         | Users unfamiliar with Zettelkasten system or skeptical of its advantages will likely reap fewer benefits |
 
 ## Conclusion
 

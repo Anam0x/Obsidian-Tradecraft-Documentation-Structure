@@ -1,7 +1,7 @@
 ---
 aliases: 
 tags:
-  - ⌛Debrief
+  - ⌛Case_Study
 primary categories:
   - "[[01 - Training]]"
 secondary categories:
@@ -11,6 +11,7 @@ type: Debrief
 # [[Example Hack The Box Retired Machine]]
 
 ***
+
 ## Summary
 
 This retired Hack The Box Linux machine simulated a typical web-facing content management system misconfiguration, presenting opportunities to exercise web application exploitation, credential reuse, and Linux privilege escalation techniques.
