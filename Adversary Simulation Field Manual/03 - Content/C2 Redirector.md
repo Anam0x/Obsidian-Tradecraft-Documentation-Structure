@@ -1,12 +1,12 @@
 ---
-aliases: 
+aliases:
 tags:
   - 🏗️Infrastructure
 primary categories:
-  - "[[01 - Penetration Test]]"
-  - "[[01 - Red Team]]"
+  - "[[Penetration Test]]"
+  - "[[Red Team]]"
 secondary categories:
-  - "[[02 - C2 Tradecraft & Profiles]]"
+  - "[[C2 Tradecraft & Profiles]]"
 type: Infrastructure
 ---
 # [[C2 Redirector]]

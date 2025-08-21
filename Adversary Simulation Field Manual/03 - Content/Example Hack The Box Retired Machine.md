@@ -1,11 +1,11 @@
 ---
-aliases: 
+aliases:
 tags:
   - ⌛Case_Study
 primary categories:
-  - "[[01 - Training]]"
+  - "[[Training]]"
 secondary categories:
-  - "[[02 - Hack the Box]]"
+  - "[[Hack the Box]]"
 type: Debrief
 ---
 # [[Example Hack The Box Retired Machine]]
@@ -16,7 +16,8 @@ type: Debrief
 
 This retired Hack The Box Linux machine simulated a typical web-facing content management system misconfiguration, presenting opportunities to exercise web application exploitation, credential reuse, and Linux privilege escalation techniques.
 
-Initial access was achieved by exploiting a vulnerable WordPress plugin that permitted unauthenticated remote code execution (RCE), allowing the attacker to drop a reverse shell.  Lateral movement was facilitated by enumerating local WordPress configuration files, extracting hashed user credentials, and successfully cracking a low-complexity password. Privilege escalation was ultimately obtained through a misconfigured `sudo` rule that permitted the compromised user to run `perl` with *root* privileges, enabling immediate shell access as *root*. 
+Initial access was achieved by exploiting a vulnerable WordPress plugin that permitted unauthenticated remote code execution (RCE), allowing the attacker to drop a reverse shell.  Lateral movement was facilitated by enumerating local WordPress configuration files, extracting hashed user credentials, and successfully cracking a low-complexity password. Privilege escalation was ultimately obtained through a misconfigured `sudo` rule that permitted the compromised user to run `perl` with *root* privileges, enabling immediate shell access as *root*.
+
 ## Environment Overview
 
 * **TEST.HTB (`192.168.X.Y`)**:
@@ -77,8 +78,6 @@ Initial access was achieved by exploiting a vulnerable WordPress plugin that per
 | -------------------------------------------------------------- | -------------------------------- |
 | [MITRE ATT&CK Framework](https://attack.mitre.org/)            | MITRE ATT&CK Framework           |
 | [Hack The Box](https://www.hackthebox.com/hacker/hacking-labs) | Hack The Box online lab platform |
-
-[^1]: 
 
 ***
 

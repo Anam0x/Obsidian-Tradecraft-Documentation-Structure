@@ -4,18 +4,19 @@ aliases:
 tags:
   - 💣Payload
 primary categories:
-  - "[[01 - Development]]"
-  - "[[01 - Penetration Test]]"
-  - "[[01 - Red Team]]"
+  - "[[Development]]"
+  - "[[Penetration Test]]"
+  - "[[Red Team]]"
 secondary categories:
-  - "[[02 - PowerShell]]"
-  - "[[02 - Weaponization]]"
-  - "[[02 - Payload Engineering]]"
+  - "[[PowerShell]]"
+  - "[[Weaponization]]"
+  - "[[Payload Engineering]]"
 type: Payload
 ---
 # [[Reflective PowerShell Shellcode Runner]]
 
 ***
+
 ## Overview
 
 This reflective PowerShell shellcode runner template provides a stealthier alternative to traditional in-memory payload delivery by avoiding the use of disk-backed artifacts. A common method of executing unmanaged code in PowerShell is through the `Add-Type` cmdlet, which compiles and stores .NET assemblies to disk—a behavior that can trigger detection from endpoint monitoring tools. In contrast, this template performs all operations entirely in memory, eliminating the reliance on Add-Type and minimizing forensic evidence. This payload template is largely based on [`run.ps1`](https://gist.github.com/braaaax/41789bad5d07b8ba236299047a774ffa) by [_braaaax_](https://github.com/braaaax).

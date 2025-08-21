@@ -1,16 +1,18 @@
 ---
-aliases: 
+aliases:
 tags:
   - 📝Basic
 primary categories:
-  - "[[01 - Vault Administration]]"
+  - "[[Vault Administration]]"
 secondary categories:
-  - "[[02 - Obsidian]]"
+  - "[[Obsidian]]"
 type: Basic
 ---
 # [[Emoji Toolbar]]
 ***
 ## Description
+
+The Emoji Toolbar plugin for Obsidian adds a customizable hotkey that opens a searchable emoji picker, letting you quickly filter, preview (with Twitter-style formatting), and insert emojis, including skin tone variants and recently used icons, directly into your editor.
 
 ## Installation
 

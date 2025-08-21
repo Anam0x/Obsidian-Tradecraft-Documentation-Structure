@@ -1,335 +1,232 @@
 <%* 
+/**
+ * Adversary Simulation Field Manual - Automated Note and Category Creation System
+ * 
+ * This script automates the creation of hierarchical notes for a red team reference guide:
+ * - Primary Categories (🥇): High-level topics like "Penetration Test", "Red Team"
+ * - Secondary Categories (🥈): Mid-level topics like "Active Directory", "Metasploit" 
+ * - Content Notes (⚛️): Atomic notes with specific content types like "Tools", "TTPs", "Payloads"
+ * 
+ * Features:
+ * - Interactive note type selection with validation
+ * - Smart emoji selection for categorization tags
+ * - Template-based content generation
+ * - Automated file organization and linking
+ * - Dynamic content type and primary category creation
+ */
+
 //////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////// Functions ////////////////////////////////////
+//                                 CONSTANTS                                   //
 //////////////////////////////////////////////////////////////////////////////////
 
-// Name: setNoteType
-// Description: Ensure a valid Note Type is selected, keep prompting until one is chosen
-async function setNoteType() {
-    let selectedNoteType = null;
-    while (!selectedNoteType) {
-        selectedNoteType = await tp.system.suggester(
-            ["🥇 (Primary Category)", "🥈 (Secondary Category)", "⚛️ (Content/Atomic Note)"], 
-            ["Primary", "Secondary", "Content"], 
-            false,
-            "Select note type (required):"
-        );
-        // If null/undefined, loop continues
-        if (!selectedNoteType) {
-	        new Notice("Note type selection is required to continue");
-	    }
-    }
-    return selectedNoteType;
+const PATHS = {
+    PRIMARY_CATEGORIES: "01 - Primary Categories",
+    SECONDARY_CATEGORIES: "02 - Secondary Categories", 
+    CONTENT: "03 - Content",
+    CONTENT_TEMPLATES: "04 - Templates/04 - Content",
+    PRIMARY_TEMPLATE_META: "[[04 - Templates/04 - Primary Category/Metadata]]",
+    PRIMARY_TEMPLATE_BODY: "[[04 - Templates/04 - Primary Category/Body]]",
+    SECONDARY_TEMPLATE_META: "[[04 - Templates/04 - Secondary Category/Metadata]]",
+    SECONDARY_TEMPLATE_BODY: "[[04 - Templates/04 - Secondary Category/Body]]",
+    BASIC_TEMPLATE: "04 - Templates/04 - Content/Basic"
+};
+
+const NOTE_TYPES = {
+    PRIMARY: "Primary",
+    SECONDARY: "Secondary", 
+    CONTENT: "Content"
+};
+
+const RESERVED_EMOJIS = new Set(['🥇', '🥈', '⚛️']);
+
+const EMOJI_REGEX = /[\u{1F600}-\u{1F64F}]|[\u{1F300}-\u{1F5FF}]|[\u{1F680}-\u{1F6FF}]|[\u{1F1E0}-\u{1F1FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]/u;
+
+//////////////////////////////////////////////////////////////////////////////////
+//                              UTILITY FUNCTIONS                              //
+//////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Shows a user notice with consistent formatting
+ * @param {string} message - Message to display
+ */
+function showNotice(message) {
+    new Notice(message);
 }
 
-// Name: setTitle
-// Description: Ensure a valid title is supplied, or prompt user for title.
-// Rename the created file from "Untitled" to what they've supplied.
-async function setTitle(title, noteType) {
-    let destinationPath;
-    let promptText;
-    
-    switch(noteType) {
-        case "Primary":
-            destinationPath = "01 - Primary Categories/01 - " + title + ".md";
-            promptText = "Title of New Primary Category";
-            break;
-        case "Secondary":
-            destinationPath = "02 - Secondary Categories/02 - " + title + ".md";
-            promptText = "Title of New Secondary Category";
-            break;
-        case "Content":
-            destinationPath = "03 - Content/" + title + ".md";
-            promptText = "Title of New Content/Atomic Note";
-            break;
-    }
-    
-    if (await isValidTitle(title, destinationPath)) {
-        console.log(`Title: "${title}" is valid`);
-        return title;
-    } else {
-        const newTitle = await tp.system.prompt(promptText);
-        return await setTitle(newTitle, noteType);
-    }
+/**
+ * Logs error with context and shows user-friendly notice
+ * @param {Error} error - Error object
+ * @param {string} context - Context description
+ * @param {string} fallback - Fallback value description
+ */
+function logError(error, context, fallback = null) {
+    console.error(`[Red Team Script] ${context}:`, error);
+    const message = fallback 
+        ? `${context} failed. Using ${fallback} as fallback.`
+        : `Error in ${context}: ${error.message}`;
+    showNotice(message);
 }
 
-// Name: isValidTitle
-// Description: Checks supplied string (title) against 'undefined' type, null 
-// value, empty value and when the type is a string - we validate if it follows 
-// the default naming scheme of 'Untitled #' - rejects assignment of any of these 
-// cases. Also checks for duplicates in destination directory.
-// Return: Boolean
-async function isValidTitle(title, destinationPath) {
-    const noteExists = await tp.file.exists(destinationPath);
-    
-    // If nothing was supplied, try again
-    if (typeof title === 'undefined' || (typeof title === 'string' && title.includes('Untitled')) || title === null || title === "") {
-        new Notice("Provide a distinct note title to continue");
+/**
+ * Validates that a title is usable (not empty, not default, not duplicate)
+ * @param {string} title - Title to validate
+ * @param {string} destinationPath - Full path where note would be created
+ * @param {boolean} isNote - Boolean indicating whether title is for a future note (true) or content type (false)
+ * @returns {Promise<boolean>} - True if title is valid
+ */
+async function isValidTitle(title, destinationPath, isNote) {
+    // Check for empty, undefined, or default titles
+    if (!title || 
+        title.includes('Untitled') || 
+        title.trim() === "") {
+        const message = isNote ? "Please provide a distinct note title" : "Please provide a distinct content type title";
+        showNotice(message);
         return false;
-    } 
-    // If duplicate exists in destination directory, try again
-    else if (noteExists === true) {
-	    new Notice("A note with this title already exists in the destination directory");
+    }
+    
+    // Check for duplicates
+    const noteExists = await tp.file.exists(destinationPath);
+    if (noteExists) {
+		const message = isNote ? "A note with this title already exists in the destination directory" : "A content type with this title already exists in the destination directory";
+        showNotice(message);
         return false;
     }
     
     return true;
 }
 
-// Name: getAllUsedEmojis
-// Description: Scans all Notes in the vault to find emojis already in use as Search Tags
-// Returns: Set of used emojis
-// TODO: Figure out why this is not working; most likely the emojiMatch regex
-async function getAllUsedEmojis() {
-    const usedEmojis = new Set();
-    
-    // Get all markdown files in the vault
-    const allFiles = app.vault.getMarkdownFiles();
-    
-    for (const file of allFiles) {
-        try {
-            const content = await app.vault.read(file);
-            const frontmatter = app.metadataCache.getFileCache(file)?.frontmatter;
-            
-            if (frontmatter && frontmatter.tags) {
-                // Extract emojis from tags
-                frontmatter.tags.forEach(tag => {
-                    // Match emojis at the start of tags (excluding system tags like 🥇Primary_Category)
-                    const emojiMatch = tag.match(/^([\u{1F600}-\u{1F64F}]|[\u{1F300}-\u{1F5FF}]|[\u{1F680}-\u{1F6FF}]|[\u{1F1E0}-\u{1F1FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}])/u);
-                    if (emojiMatch && !tag.includes('Primary_Category') && !tag.includes('Secondary_Category')) {
-                        usedEmojis.add(emojiMatch[1]);
-                    }
-                });
-            }
-        } catch (error) {
-            console.log(`Error reading file ${file.path}: ${error}`);
-        }
+/**
+ * Creates a standardized file path based on note type and title
+ * @param {string} noteType - Type of note (Primary, Secondary, Content)
+ * @param {string} title - Note title
+ * @returns {string} - Full file path
+ */
+function createDestinationPath(noteType, title) {
+    switch(noteType) {
+        case NOTE_TYPES.PRIMARY:
+            return `${PATHS.PRIMARY_CATEGORIES}/${title}.md`;
+        case NOTE_TYPES.SECONDARY:
+            return `${PATHS.SECONDARY_CATEGORIES}/${title}.md`;
+        case NOTE_TYPES.CONTENT:
+            return `${PATHS.CONTENT}/${title}.md`;
+        case "Content Type":
+	        return `${PATHS.CONTENT_TEMPLATES}/${title}`;
+        default:
+            throw new Error(`Unknown note type: ${noteType}`);
     }
-    
-    // Also check existing system emojis that are reserved
-    const reservedEmojis = ['🥇', '🥈', '⚛️'];
-    reservedEmojis.forEach(emoji => usedEmojis.add(emoji));
-    
-    return usedEmojis;
 }
 
-// Name: getCategorizedEmojis  
-// Description: Returns emojis organized by red team categories
-function getCategorizedEmojis() {
-    return {
-        "🔥 Attack & Exploitation": [
-            {emoji: "💥", desc: "Attack/Boom"}, 
-            {emoji: "💣", desc: "Payload/Exploit"},
-            {emoji: "⚔️", desc: "Weapon/Tool"},
-            {emoji: "🎯", desc: "Target/Precision"},
-            {emoji: "🔨", desc: "Brute Force"},
-            {emoji: "💉", desc: "Injection"},
-            {emoji: "🎣", desc: "Phishing"},
-            {emoji: "🎭", desc: "Impersonation/Social Engineering"},
-            {emoji: "🐚", desc: "Shell Access"},
-            {emoji: "🔴", desc: "Red Team"},
-            {emoji: "🟣", desc: "Purple Team"}
-        ],
-        "🛡️ Defense & Security": [
-            {emoji: "🛡️", desc: "Defense/Shield"},
-            {emoji: "🔒", desc: "Secured/Locked"},
-            {emoji: "🔐", desc: "Encryption"},
-            {emoji: "🔑", desc: "Authentication"},
-            {emoji: "🧱", desc: "Firewall/Block"},
-            {emoji: "👁️", desc: "Monitoring"},
-            {emoji: "⚠️", desc: "Warning"},
-            {emoji: "🔵", desc: "Blue Team"},
-            {emoji: "🚨", desc: "Alert"},
-            {emoji: "🗝️", desc: "Old Key/Cryptography"}
-        ],
-        "📊 Analysis & Intelligence": [
-            {emoji: "📊", desc: "Analysis/Charts"},
-            {emoji: "🔍", desc: "Investigation"},
-            {emoji: "📈", desc: "Metrics/Growth"},
-            {emoji: "📋", desc: "Checklist/Audit"},
-            {emoji: "📝", desc: "Documentation"},
-            {emoji: "📚", desc: "Research/Learn"},
-            {emoji: "🧠", desc: "Brain/Intelligence"},
-            {emoji: "😈", desc: "Threat Actor"}
-        ],
-        "🌐 Network & Infrastructure": [
-            {emoji: "🌐", desc: "Network/Web"},
-            {emoji: "📡", desc: "Communication"},
-            {emoji: "🔗", desc: "Links/Connections"},
-            {emoji: "💻", desc: "Computer/Client"},
-            {emoji: "🖥️", desc: "Server/Desktop"},
-            {emoji: "📱", desc: "Mobile Device"},
-            {emoji: "🗄️", desc: "Database/Storage"},
-            {emoji: "📶", desc: "Wireless/Signal"}
-        ],
-        "🔧 Tools & Utilities": [
-            {emoji: "🔧", desc: "Tool/Utility"},
-            {emoji: "⚙️", desc: "Configuration"},
-            {emoji: "🛠️", desc: "Toolkit/Setup"},
-            {emoji: "🤖", desc: "Automation"},
-            {emoji: "💾", desc: "Storage/Backup"},
-            {emoji: "📦", desc: "Package/Bundle"},
-            {emoji: "⚡", desc: "Fast/Performance"},
-            {emoji: "💲", desc: "Dollar Sign/Command"}
-        ],
-        "➕ Miscellaneous": [
-            {emoji: "💡", desc: "Light Bulb/Idea"},
-            {emoji: "🏦", desc: "Bank/Vault"},
-            {emoji: "👤", desc: "Silhouette/Person"},
-            {emoji: "🕳️", desc: "Hole/Vulnerability"},
-            {emoji: "👣", desc: "Footprint/Clue"},
-            {emoji: "🧪", desc: "Test Tube/Lab"},
-            {emoji: "💀", desc: "Skull"},
-            {emoji: "📡", desc: "Satellite"},
-            {emoji: "⌨️", desc: "Keyboard"},
-            {emoji: "🖱️", desc: "Mouse"},
-            {emoji: "💿", desc: "CD"},
-            {emoji: "🔌", desc: "Electric Plug"},
-            {emoji: "🔬", desc: "Microscope"},
-            {emoji: "🔭", desc: "Telescope"},
-            {emoji: "⚖️", desc: "Balance Scale"},
-            {emoji: "🔗", desc: "Link"},
-            {emoji: "🌍", desc: "Earth Globe Europe-Africa"}
-        ]
-    };
+/**
+ * Returns a sanitized file name
+ * @param {string} title - Prospective note/content type title
+ * @returns {string} - Sanitized note/content type title
+*/
+function sanitizeFileName(title) {
+    return title
+        .replace(/[/\\:*?"<>|]/g, '-')  // Replace invalid chars
+        .replace(/^(CON|PRN|AUX|NUL|COM[1-9]|LPT[1-9])$/i, '$1_') // Windows reserved names
+        .trim()
+        .substring(0, 255); // Length limit
 }
 
-// Name: smartEmojiSelector
-// Description: Main function for intelligent emoji selection
-async function smartEmojiSelector(name) {
-    const usedEmojis = await getAllUsedEmojis();
+//////////////////////////////////////////////////////////////////////////////////
+//                           CORE WORKFLOW FUNCTIONS                           //
+//////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Prompts user to select note type with validation loop
+ * @returns {Promise<string>} - Selected note type
+ */
+async function selectNoteType() {
+    const options = [NOTE_TYPES.PRIMARY, NOTE_TYPES.SECONDARY, NOTE_TYPES.CONTENT];
+    const displayOptions = [
+        "🥇 Primary Category (High-level topics)",
+        "🥈 Secondary Category (Mid-level topics)", 
+        "⚛️ Content/Atomic Note (Specific content)"
+    ];
     
-    // Build selection options - only categorized emojis
-    const options = [];
-    const displayOptions = [];
-    
-    // Add categorized options
-    const categories = getCategorizedEmojis();
-    for (const [categoryName, emojis] of Object.entries(categories)) {
-        const availableInCategory = emojis.filter(e => !usedEmojis.has(e.emoji));
+    let selectedType = null;
+    while (!selectedType) {
+        selectedType = await tp.system.suggester(
+            displayOptions, 
+            options, 
+            false,
+            "Select note type (required):"
+        );
         
-        availableInCategory.forEach(item => {
-            const display = `${item.emoji} ${item.desc}`;
-            displayOptions.push(display);
-            options.push(item.emoji);
-        });
-    }
-    
-    // Add manual entry and random options
-    displayOptions.push("✏️ Enter emoji manually");
-    options.push("MANUAL_ENTRY");
-    displayOptions.push("🎲 Random available emoji");
-    options.push("RANDOM");
-    
-    // Verify arrays match
-    console.log(`Display options count: ${displayOptions.length}, Options count: ${options.length}`);
-    
-    // Show selection
-    const promptText = `Select emoji for "${name}":`;
-    
-    const selection = await tp.system.suggester(
-        displayOptions,
-        options,
-        false,
-        promptText
-    );
-    
-    if (!selection) {
-	    new Notice(`Search tag selection failed; using 📁 as fallback search tag`);
-        return "📁";
-    }
-    
-    // Handle special selections
-    if (selection === "MANUAL_ENTRY") {
-        return await handleManualEmojiEntry();
-    }
-    
-    if (selection === "RANDOM") {
-        const allEmojis = Object.values(categories).flat().map(e => e.emoji);
-        const available = allEmojis.filter(e => !usedEmojis.has(e));
-        return available[Math.floor(Math.random() * available.length)] || "📁";
-    }
-    
-    return selection;
-}
-
-// Name: handleManualEmojiEntry
-// Description: Handles manual emoji entry with validation
-// Returns: Validated emoji string
-async function handleManualEmojiEntry() {
-	let manualEmoji = null;
-	
-	// Basic validation - check if it looks like an emoji
-    const emojiRegex = /[\u{1F600}-\u{1F64F}]|[\u{1F300}-\u{1F5FF}]|[\u{1F680}-\u{1F6FF}]|[\u{1F1E0}-\u{1F1FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]/u;
-    
-    while (!manualEmoji) {
-        manualEmoji = await tp.system.prompt("Enter emoji character (paste from system emoji picker):");
-        // If null/undefined/invalid, loop continues
-        if (!manualEmoji || !emojiRegex.test(manualEmoji)) {
-	        const retry = await tp.system.prompt("That doesn't look like an emoji. Try again? (y/n)");
-	        if (retry?.toLowerCase() === 'y') {
-	            continue;
-	        }
-	        new Notice(`Manual entry failed; using 📁 as fallback search tag`);
-	        return "📁";
-	    }
-    }
-    
-    // Check if already in use
-    // TODO: Emoji search is not working, troubleshoot before attempting to enforce emoji uniqueness
-    /*
-    const usedEmojis = await getAllUsedEmojis();
-    if (usedEmojis.has(manualEmoji)) {
-        const retry = await tp.system.prompt(`Emoji ${manualEmoji} is already in use. Try another? (y/n)`);
-        if (retry?.toLowerCase() === 'y') {
-            return await handleManualEmojiEntry();
+        if (!selectedType) {
+            showNotice("Note type selection is required to continue");
         }
-        throw new Error("Emoji already in use");
     }
-    */
     
-    return manualEmoji;
+    return selectedType;
 }
 
-// Name: getPrimaryCategories
-// Description: Gets list of all primary category files in the vault
-// Returns: Array of primary category names (without prefixes)
+/**
+ * Gets and validates note title with recursive prompting for invalid titles
+ * @param {string} initialTitle - Starting title (usually from tp.file.title)
+ * @param {string} noteType - Type of note being created
+ * @returns {Promise<string>} - Validated title
+ */
+async function getValidatedNoteTitle(initialTitle, noteType) {
+    const destinationPath = createDestinationPath(noteType, initialTitle);
+    if (await isValidTitle(initialTitle, destinationPath, true)) {
+        console.log(`Title "${initialTitle}" is valid for ${noteType}`);
+        return initialTitle;
+    } 
+    
+    // Recursive prompting for new title
+    const promptText = `Title for New ${noteType} ${noteType === NOTE_TYPES.CONTENT ? 'Note' : 'Category'}:`;
+    const newTitle = await tp.system.prompt(promptText);
+    
+    return await getValidatedNoteTitle(newTitle, noteType);
+}
+
+//////////////////////////////////////////////////////////////////////////////////
+//                            CATEGORY MANAGEMENT                              //
+//////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Retrieves all category files from a specific directory (no prefix removal needed)
+ * @param {string} folderPath - Path to category folder
+ * @returns {Promise<string[]>} - Array of category names
+ */
+async function getCategoriesFromFolder(folderPath) {
+    const folder = app.vault.getAbstractFileByPath(folderPath);
+    if (!folder || !folder.children) {
+        return [];
+    }
+    
+    return folder.children
+        .filter(file => file.extension === "md")
+        .map(file => file.basename)
+        .sort();
+}
+
+/**
+ * Gets all primary categories
+ * @returns {Promise<string[]>} - Array of primary category names
+ */
 async function getPrimaryCategories() {
-    const primaryCatFolder = app.vault.getAbstractFileByPath("01 - Primary Categories");
-    if (!primaryCatFolder) {
-        return [];
-    }
-    
-    const files = primaryCatFolder.children
-        .filter(file => file.extension === "md")
-        .map(file => file.basename.replace(/^01 - /, "")); // Remove "01 - " prefix
-    
-    return files.sort(); // Return in alphabetical order
+    return await getCategoriesFromFolder(PATHS.PRIMARY_CATEGORIES);
 }
 
-// Name: getSecondaryCategories
-// Description: Gets list of all secondary category files in the vault
-// Returns: Array of secondary category names (without prefixes)
+/**
+ * Gets all secondary categories  
+ * @returns {Promise<string[]>} - Array of secondary category names
+ */
 async function getSecondaryCategories() {
-    const secondaryCatFolder = app.vault.getAbstractFileByPath("02 - Secondary Categories");
-    if (!secondaryCatFolder) {
-        return [];
-    }
-    
-    const files = secondaryCatFolder.children
-        .filter(file => file.extension === "md")
-        .map(file => file.basename.replace(/^02 - /, "")); // Remove "02 - " prefix
-    
-    return files.sort(); // Return in alphabetical order
+    return await getCategoriesFromFolder(PATHS.SECONDARY_CATEGORIES);
 }
 
-// Name: selectCategories
-// Description: Prompts user to select one or more categories (Primary or Secondary)
-// Returns: Array of selected category names with proper linking format
+/**
+ * Interactive category selection with multi-select capability
+ * @param {string} categoryType - "primary" or "secondary"
+ * @returns {Promise<string[]>} - Array of selected categories formatted as wiki links
+ */
 async function selectCategories(categoryType) {
     const isSecondary = categoryType === "secondary";
     const availableCategories = isSecondary ? await getSecondaryCategories() : await getPrimaryCategories();
-    const prefix = isSecondary ? "02 - " : "01 - ";
     const categoryLabel = isSecondary ? "SECONDARY" : "PRIMARY";
     
     if (availableCategories.length === 0) {
@@ -341,19 +238,16 @@ async function selectCategories(categoryType) {
     let continueSelecting = true;
     
     while (continueSelecting && selectedCategories.length < availableCategories.length) {
-        // Filter out already selected categories
         const remainingCategories = availableCategories.filter(cat => !selectedCategories.includes(cat));
         
-        if (remainingCategories.length === 0) {
-            break;
-        }
+        if (remainingCategories.length === 0) break;
         
-        // Add "Done" option if at least one category is selected
         const options = [...remainingCategories];
         const displayOptions = [...remainingCategories];
         
+        // Add "Done" option after first selection
         if (selectedCategories.length > 0) {
-            options.push("Done");
+            options.push("DONE");
             displayOptions.push("✅ Done (Finish Selection)");
         }
         
@@ -363,444 +257,597 @@ async function selectCategories(categoryType) {
         
         const selection = await tp.system.suggester(displayOptions, options, false, promptText);
         
-        if (selection === "Done" || !selection) {
+        if (selection === "DONE" || !selection) {
             continueSelecting = false;
         } else {
             selectedCategories.push(selection);
         }
     }
     
-    // Format as proper wiki links with appropriate prefix
-    return selectedCategories.map(cat => `"[[${prefix}${cat}]]"`);
+    // Format as proper wiki links (no prefixes needed)
+    return selectedCategories.map(cat => `"[[${cat}]]"`);
 }
 
-// Name: getAvailableContentTypes
-// Description: Gets list of all available Content Types from templates with their Search Tag emojis
-// Returns: Array of Content Type objects with name, template info, and emoji from metadata
+//////////////////////////////////////////////////////////////////////////////////
+//                              EMOJI MANAGEMENT                               //
+//////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Returns categorized emoji options for red team contexts
+ * @returns {Object} - Object with emoji categories and options
+ */
+function getCategorizedEmojis() {
+    return {
+        "🔥 Attack & Exploitation": [
+            {emoji: "💥", desc: "Attack/Impact"}, 
+            {emoji: "💣", desc: "Payload/Exploit"},
+            {emoji: "⚔️", desc: "Tool/Weapon"},
+            {emoji: "🎯", desc: "Target/Precision"},
+            {emoji: "🔨", desc: "Brute Force"},
+            {emoji: "💉", desc: "Code Injection"},
+            {emoji: "🎣", desc: "Phishing"},
+            {emoji: "🎭", desc: "Social Engineering"},
+            {emoji: "🐚", desc: "Shell/Command Line"},
+            {emoji: "🔴", desc: "Red Team Activity"},
+            {emoji: "🟣", desc: "Purple Team Activity"},
+            {emoji: "🔓", desc: "Unlocked/Broken Access Control"},
+            {emoji: "🕳️", desc: "Vulnerability/Security Risk"}
+        ],
+        "🛡️ Defense & Security": [
+            {emoji: "🛡️", desc: "Defense/Protection"},
+            {emoji: "🔒", desc: "Access Control"},
+            {emoji: "🔐", desc: "Encryption"},
+            {emoji: "🔑", desc: "Authentication"},
+            {emoji: "🧱", desc: "Firewall/Blocking"},
+            {emoji: "👁️", desc: "Monitoring/Detection"},
+            {emoji: "⚠️", desc: "Warning/Alert"},
+            {emoji: "🔵", desc: "Blue Team Activity"},
+            {emoji: "🚨", desc: "Incident Response"},
+            {emoji: "👣", desc: "IOC/Artifact"},
+            {emoji: "🗝️", desc: "Old Key/Cryptography"}
+        ],
+        "📊 Analysis & Intelligence": [
+            {emoji: "📊", desc: "Data Analysis"},
+            {emoji: "🔍", desc: "Investigation/OSINT"},
+            {emoji: "📈", desc: "Metrics/Reporting"},
+            {emoji: "📋", desc: "Audit/Checklist"},
+            {emoji: "📝", desc: "Documentation/Notes"},
+            {emoji: "😈", desc: "Threat Actor/APT"},
+            {emoji: "✍️", desc: "Reporting/Writing"},
+            {emoji: "🎒", desc: "Education/Training"},
+            {emoji: "👤", desc: "Person/Silhouette"},
+            {emoji: "💡", desc: "Idea/Thought"},
+            {emoji: "🗺️", desc: "Mind Map/Graph"},
+            {emoji: "✅", desc: "Checklist/Playbook"},
+            {emoji: "🎓", desc: "Student/Training"},
+            {emoji: "📕", desc: "Records"}
+        ],
+        "🌐 Infrastructure": [
+            {emoji: "🌐", desc: "Network/Web"},
+            {emoji: "🧠", desc: "Artificial Intelligence"},
+            {emoji: "📡", desc: "Communication/C2"},
+            {emoji: "💻", desc: "Client/Endpoint"},
+            {emoji: "🖥️", desc: "Server/Infrastructure"},
+            {emoji: "📱", desc: "Mobile/Device"},
+            {emoji: "🗄️", desc: "Database/Storage"},
+            {emoji: "📶", desc: "Wireless/RF"},
+            {emoji: "☁️", desc: "Cloud/Third-Party"},
+            {emoji: "🏦", desc: "Vault/Secured Data"},
+            {emoji: "🏗️", desc: "Infrastructure/Construction"},
+            {emoji: "🧪", desc: "Lab Setup"}
+        ],
+        "⚙️ Technical": [
+            {emoji: "🔧", desc: "Configuration/Tool"},
+            {emoji: "🛠️", desc: "Toolkit/Development"},
+            {emoji: "🤖", desc: "Automation/Script"},
+            {emoji: "💾", desc: "Data/Persistence"},
+            {emoji: "📦", desc: "Package/Bundle"},
+            {emoji: "⚡", desc: "Performance/Speed"},
+            {emoji: "💲", desc: "Command/Shell"},
+            {emoji: "⚙️", desc: "Gear/Internals"}
+        ]
+    };
+}
+
+/**
+ * Smart emoji selector with categorized options and availability checking
+ * @param {string} itemName - Name of item being tagged (for context)
+ * @returns {Promise<string>} - Selected emoji
+ */
+async function selectEmoji(itemName) {
+    const categories = getCategorizedEmojis();
+    const options = [];
+    const displayOptions = [];
+    
+    // Build categorized options
+    for (const [categoryName, emojis] of Object.entries(categories)) {
+        // Add category separator
+        displayOptions.push(`--- ${categoryName} ---`);
+        options.push(`SEPARATOR_${categoryName}`);
+        
+        // Add emoji options
+        emojis.forEach(item => {
+            displayOptions.push(`${item.emoji} ${item.desc}`);
+            options.push(item.emoji);
+        });
+    }
+    
+    // Add utility options
+    displayOptions.push("--- Utilities ---");
+    options.push("SEPARATOR_Utilities");
+    displayOptions.push("✏️ Enter emoji manually");
+    options.push("MANUAL_ENTRY");
+    displayOptions.push("🎲 Random selection");
+    options.push("RANDOM");
+    
+    const selection = await tp.system.suggester(
+        displayOptions,
+        options,
+        false,
+        `Select emoji for "${itemName}":`
+    );
+    
+    // Handle special selections
+    if (!selection || selection.startsWith("SEPARATOR_")) {
+        showNotice("Using default emoji 📁");
+        return "📁";
+    }
+    
+    if (selection === "MANUAL_ENTRY") {
+        return await handleManualEmojiEntry();
+    }
+    
+    if (selection === "RANDOM") {
+        const allEmojis = Object.values(categories).flat().map(e => e.emoji);
+        return allEmojis[Math.floor(Math.random() * allEmojis.length)] || "📁";
+    }
+    
+    return selection;
+}
+
+/**
+ * Handles manual emoji entry with validation
+ * @returns {Promise<string>} - Validated emoji or fallback
+ */
+async function handleManualEmojiEntry() {
+    let attempts = 0;
+    const maxAttempts = 3;
+    
+    while (attempts < maxAttempts) {
+        const manualEmoji = await tp.system.prompt(
+            `Enter emoji character (${attempts + 1}/${maxAttempts}):`
+        );
+        
+        if (!manualEmoji) {
+            showNotice("Manual entry cancelled");
+            return "📁";
+        }
+        
+        if (EMOJI_REGEX.test(manualEmoji)) {
+            return manualEmoji;
+        }
+        
+        attempts++;
+        showNotice(`That doesn't appear to be a valid emoji. ${maxAttempts - attempts} attempts remaining.`);
+    }
+    
+    showNotice("Max attempts reached. Using fallback emoji 📁");
+    return "📁";
+}
+
+//////////////////////////////////////////////////////////////////////////////////
+//                           CONTENT TYPE MANAGEMENT                           //
+//////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Scans available content type templates and extracts their metadata
+ * @returns {Promise<Object[]>} - Array of content type configurations
+ */
 async function getAvailableContentTypes() {
-    const contentTypesFolder = app.vault.getAbstractFileByPath("04 - Templates/04 - Content");
-    if (!contentTypesFolder) {
+    const templatesFolder = app.vault.getAbstractFileByPath(PATHS.CONTENT_TEMPLATES);
+    if (!templatesFolder || !templatesFolder.children) {
         return [];
     }
     
     const contentTypes = [];
     
-    for (const folder of contentTypesFolder.children) {
-        if (folder.children) { // Only folders
-            const match = folder.name.match(/^(\d{4}) - (.+)$/);
-            if (match) {
-                const templateNumber = match[1];
-                const typeName = match[2];
+    for (const folder of templatesFolder.children) {
+        if (!folder.children) continue; // Skip non-folders
+        
+        const typeName = folder.name;
+        
+        // Extract emoji from metadata
+        let emoji = "📝"; // Default fallback
+        try {
+            const metadataPath = `${PATHS.CONTENT_TEMPLATES}/${folder.name}/Metadata.md`;
+            const metadataFile = app.vault.getAbstractFileByPath(metadataPath);
+            
+            if (metadataFile) {
+                const frontmatter = app.metadataCache.getFileCache(metadataFile)?.frontmatter;
                 
-                // Try to extract emoji from metadata file
-                let emoji = "📝"; // Default emoji if none found
-                try {
-                    const metadataPath = `04 - Templates/04 - Content/${folder.name}/${templateNumber}01 - Metadata.md`;
-                    const metadataFile = app.vault.getAbstractFileByPath(metadataPath);
+                if (frontmatter?.tags?.length > 0) {
+                    // Find content type tag (exclude system tags)
+                    const contentTag = frontmatter.tags.find(tag => 
+                        typeof tag === 'string' &&
+                        !tag.includes('Primary_Category') && 
+                        !tag.includes('Secondary_Category')
+                    );
                     
-                    if (metadataFile) {
-                        const content = await app.vault.read(metadataFile);
-                        const frontmatter = app.metadataCache.getFileCache(metadataFile)?.frontmatter;
-                        
-                        if (frontmatter && frontmatter.tags && Array.isArray(frontmatter.tags)) {
-                            // Find the content type tag (not system tags like Primary_Category)
-                            const contentTag = frontmatter.tags.find(tag => 
-                                !tag.includes('Primary_Category') && 
-                                !tag.includes('Secondary_Category') &&
-                                typeof tag === 'string'
-                            );
-                            
-                            if (contentTag) {
-                                // Extract emoji from the beginning of the tag
-                                const emojiMatch = contentTag.match(/^([\u{1F600}-\u{1F64F}]|[\u{1F300}-\u{1F5FF}]|[\u{1F680}-\u{1F6FF}]|[\u{1F1E0}-\u{1F1FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}])/u);
-                                if (emojiMatch) {
-                                    emoji = emojiMatch[1];
-                                }
-                            }
+                    if (contentTag) {
+                        const emojiMatch = contentTag.match(EMOJI_REGEX);
+                        if (emojiMatch) {
+                            emoji = emojiMatch[0];
                         }
                     }
-                } catch (error) {
-                    console.log(`Error reading metadata for ${typeName}: ${error}`);
-                    // Keep default emoji
                 }
-                
-                contentTypes.push({
-                    name: typeName,
-                    emoji: emoji,
-                    templateNumber: templateNumber,
-                    displayName: `${emoji} (${typeName})`,
-                    searchTag: `${emoji}${typeName.replace(/\s+/g, '_')}`
-                });
             }
+        } catch (error) {
+            logError(error, `Reading metadata for ${typeName}`, "default emoji");
         }
+        
+        contentTypes.push({
+            name: typeName,
+            emoji: emoji,
+            displayName: `${emoji} ${typeName}`,
+            searchTag: `${emoji}${typeName.replace(/\s+/g, '_')}`
+        });
     }
     
-    // Sort alphabetically by name
     return contentTypes.sort((a, b) => a.name.localeCompare(b.name));
 }
 
-// Name: setContentType
-// Description: Prompts user to select Content Type or create new one, displaying emoji and name
-// Returns: Content Type configuration object
-async function setContentType() {
+/**
+ * Gets and validates content type title with recursive prompting for invalid titles
+ * @param {string} initialTitle - Starting title
+ * @returns {Promise<string>} - Validated title
+ */
+async function getValidatedContentTypeTitle(initialTitle) {
+    const destinationPath = createDestinationPath("Content Type", initialTitle);
+    if (await isValidTitle(initialTitle, destinationPath, false)) {
+        console.log(`Title "${initialTitle}" is valid for Content Type`);
+        return initialTitle;
+    } 
+    
+    // Recursive prompting for new title
+    const promptText = `Title for New Content Type`;
+    const newTitle = await tp.system.prompt(promptText);
+    
+    return await getValidatedContentTypeTitle(newTitle);
+}
+
+/**
+ * Interactive content type selection or creation
+ * @returns {Promise<Object>} - Selected/created content type configuration
+ */
+async function selectContentType() {
     const availableTypes = await getAvailableContentTypes();
     
-    // Create options array
-    const options = [];
-    const displayOptions = [];
-    
-    // Add existing Content Types with emoji display
-    availableTypes.forEach(type => {
-        options.push(type);
-        displayOptions.push(type.displayName); // Now includes emoji: "💣 (Payload)"
-    });
-    
-    // Add "Create New Content Type" option
-    options.push("NEW_CONTENT_TYPE");
-    displayOptions.push("➕ Create New Content Type");
+    const options = [...availableTypes, "NEW_CONTENT_TYPE"];
+    const displayOptions = [
+        ...availableTypes.map(type => type.displayName),
+        "➕ Create New Content Type"
+    ];
 
-	let selectedContentType = null;
-	while (!selectedContentType) {
-        selectedContentType = await tp.system.suggester(
-	        displayOptions,
-	        options,
-	        false,
-	        "Select Content Type or create new one:"
-	    );
-        // If null/undefined, loop continues
-        if (!selectedContentType) {
-	        new Notice("Content type selection is required");
+    let selectedType = null;
+    while (!selectedType) {
+        selectedType = await tp.system.suggester(
+            displayOptions,
+            options,
+            false,
+            "Select Content Type or create new one:"
+        );
+        
+        if (!selectedType) {
+            showNotice("Content type selection is required");
         }
     }
     
-    if (selectedContentType === "NEW_CONTENT_TYPE") {
-        return await createNewContentType();
-    }
-    
-    return selectedContentType;
+    return selectedType === "NEW_CONTENT_TYPE" 
+        ? await createNewContentType()
+        : selectedType;
 }
 
-// Name: getNextTemplateNumber
-// Description: Finds the next available template number in the 04 - Content folder
-// Returns: String with next template number (e.g., "0410")
-async function getNextTemplateNumber() {
-    const templatesFolder = app.vault.getAbstractFileByPath("04 - Templates/04 - Content");
-    if (!templatesFolder) {
-        return "0410"; // Start at 0410 if no content templates exist
-    }
-    
-    const existingNumbers = templatesFolder.children
-        .filter(child => child.children) // Only folders
-        .map(folder => {
-            const match = folder.name.match(/^(\d{4})/);
-            return match ? parseInt(match[1]) : 0;
-        })
-        .filter(num => num > 0);
-    
-    if (existingNumbers.length === 0) {
-        return "0410";
-    }
-    
-    const maxNumber = Math.max(...existingNumbers);
-    return String(maxNumber + 1).padStart(4, '0');
-}
-
-// Name: createNewContentType
-// Description: Creates a new Content Type template structure with unique emoji validation
-// Returns: Object with new Content Type configuration
+/**
+ * Creates a new content type template structure
+ * @returns {Promise<Object>} - New content type configuration
+ */
 async function createNewContentType() {
-    // Get the content type name
-    let contentTypeName = null;
-	while (!contentTypeName) {
-        contentTypeName = await tp.system.prompt("Enter name for new content type (e.g., 'Report', 'Research'):");
-        // If null/undefined, loop continues
-        if (!contentTypeName) {
-	        new Notice("Content type name is required");
-        }
+    // Get content type name
+    let typeName = null;
+    while (!typeName) {
+        typeName = await getValidatedContentTypeTitle(null);
     }
     
-    // Get unique emoji for the Content Type
-    const selectedEmoji = await smartEmojiSelector(contentTypeName);
+    // Select emoji
+    const selectedEmoji = await selectEmoji(typeName);
     
-    // Generate next available template number
-    const templateNumber = await getNextTemplateNumber();
-    
-    // Create the template directory structure by copying Basic template
-    await createTemplateStructure(templateNumber, contentTypeName, selectedEmoji);
+    // Create template structure
+    await createTemplateStructure(typeName, selectedEmoji);
     
     return {
-        name: contentTypeName,
+        name: typeName,
         emoji: selectedEmoji,
-        templateNumber: templateNumber,
-        displayName: `${contentTypeName} (${templateNumber})`,
-        tag: `${selectedEmoji}${contentTypeName}`
+        displayName: `${selectedEmoji} ${typeName}`,
+        searchTag: `${selectedEmoji}${typeName.replace(/\s+/g, '_')}`
     };
 }
 
-// Name: createTemplateStructure
-// Description: Creates the folder structure and template files for a new Content Type by copying Basic
-async function createTemplateStructure(templateNumber, contentTypeName, emoji) {
-    const basePath = `04 - Templates/04 - Content/${templateNumber} - ${contentTypeName}`;
-    const basicPath = "04 - Templates/04 - Content/0401 - Basic";
+/**
+ * Creates template folder structure and files for new content type
+ * @param {string} typeName - Content type name
+ * @param {string} emoji - Selected emoji
+ */
+async function createTemplateStructure(typeName, emoji) {
+    const basePath = `${PATHS.CONTENT_TEMPLATES}/${typeName}`;
     
-    // Create the folder structure
     try {
+        // Create folder
         await app.vault.createFolder(basePath);
-    } catch (error) {
-        console.log(`Folder creation note: ${error.message}`);
-        // Folder might already exist, continue
-    }
-    
-    // Copy and modify templates from Basic
-    const templateFiles = [
-        { source: "040101 - Metadata.md", target: `${templateNumber}01 - Metadata.md` },
-        { source: "040102 - Header.md", target: `${templateNumber}02 - Header.md` },
-        { source: "040103 - Body.md", target: `${templateNumber}03 - Body.md` }
-    ];
-    
-    console.log(`Creating template files in: ${basePath}`);
-    console.log(`Copying from: ${basicPath}`);
-    
-    for (const fileInfo of templateFiles) {
-        try {
-            const sourceFilePath = `${basicPath}/${fileInfo.source}`;
+        
+        // Template files to create
+        const templateFiles = [
+            { source: "Metadata.md", target: "Metadata.md" },
+            { source: "Header.md", target: "Header.md" },
+            { source: "Body.md", target: "Body.md" }
+        ];
+        
+        for (const fileInfo of templateFiles) {
+            const sourceFilePath = `${PATHS.BASIC_TEMPLATE}/${fileInfo.source}`;
             const targetFilePath = `${basePath}/${fileInfo.target}`;
-            
-            console.log(`Processing: ${fileInfo.source} -> ${fileInfo.target}`);
             
             const sourceFile = app.vault.getAbstractFileByPath(sourceFilePath);
             if (!sourceFile) {
-                console.log(`Source file not found: ${sourceFilePath}`);
+                console.warn(`Source template file not found: ${sourceFilePath}`);
                 continue;
             }
             
             let content = await app.vault.read(sourceFile);
-            console.log(`Read content from ${fileInfo.source}, length: ${content.length}`);
             
-            // Modify metadata file to include new emoji and type
-            if (fileInfo.source.includes("Metadata")) {
-                content = content.replace(
-                    'tags:\n  - 📝Basic',
-                    `tags:\n  - ${emoji}${contentTypeName.replace(/\s+/g, '_')}` // Replace spaces with underscores
-                );
-                content = content.replace(
-                    'type: Basic',
-                    `type: ${contentTypeName}`
-                );
-                console.log(`Modified metadata content for ${contentTypeName}`);
+            // Customize metadata file
+            if (fileInfo.source === "Metadata.md") {
+                content = content
+                    .replace(
+                        'tags:\n  - 📝Basic',
+                        `tags:\n  - ${emoji}${typeName.replace(/\s+/g, '_')}`
+                    )
+                    .replace(
+                        'type: Basic',
+                        `type: ${typeName}`
+                    );
             }
             
-            // Check if target file already exists
-            const existingFile = app.vault.getAbstractFileByPath(targetFilePath);
-            if (existingFile) {
-                console.log(`File already exists, overwriting: ${targetFilePath}`);
-                await app.vault.modify(existingFile, content);
-            } else {
-                // Use app.vault.create instead of tp.file.create_new for more reliable creation
-                console.log(`Creating new file: ${targetFilePath}`);
-                await app.vault.create(targetFilePath, content);
-            }
-            
-            console.log(`Successfully created: ${fileInfo.target}`);
-            
-        } catch (error) {
-            console.log(`Error creating template file ${fileInfo.target}: ${error}`);
-            console.log(`Error details:`, error);
-            new Notice(`Failed to create ${fileInfo.target}: ${error.message}`);
+            // Create the file
+            await app.vault.create(targetFilePath, content);
         }
+        
+        showNotice(`✅ Created new content type: ${emoji} ${typeName}`);
+        
+    } catch (error) {
+        logError(error, "Creating template structure");
+        throw error;
     }
-    
-    new Notice(`Created new content type: ${emoji} ${contentTypeName}`);
-    new Notice("Template files created and ready to customize!");
 }
 
-// Name: getNoteConfig
-// Description: Builds configuration object for note creation based on note type
-// Returns: Configuration object for note building
-async function getNoteConfig(noteType, title, primaryCategories = [], secondaryCategories = [], contentTypeConfig = null, emoji = null) {
-    let config = {
-        noteType: noteType,
-        title: title,
-        primaryCategories: primaryCategories,
-        secondaryCategories: secondaryCategories
+//////////////////////////////////////////////////////////////////////////////////
+//                              NOTE BUILDING                                  //
+//////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Creates a configuration object for note building
+ * @param {Object} params - Parameters for note configuration
+ * @returns {Object} - Note configuration object
+ */
+function createNoteConfig({
+    noteType, 
+    title, 
+    primaryCategories = [], 
+    secondaryCategories = [], 
+    contentTypeConfig = null, 
+    emoji = null
+}) {
+    const baseConfig = {
+        noteType,
+        title,
+        primaryCategories,
+        secondaryCategories
     };
     
     switch(noteType) {
-        case "Primary":
-	        console.log("Primary");
-            config.prefix = "01 - ";
-            config.destination = "01 - Primary Categories/";
-            config.metadataTemplate = "[[04 - Templates/04 - Primary Category/0401 - Metadata]]";
-            config.bodyTemplate = "[[04 - Templates/04 - Primary Category/0402 - Body]]";
-            config.emoji = emoji;
-            break;
+        case NOTE_TYPES.PRIMARY:
+            return {
+                ...baseConfig,
+                destination: `${PATHS.PRIMARY_CATEGORIES}/`,
+                metadataTemplate: PATHS.PRIMARY_TEMPLATE_META,
+                bodyTemplate: PATHS.PRIMARY_TEMPLATE_BODY,
+                emoji
+            };
             
-        case "Secondary":
-            config.prefix = "02 - ";
-            config.destination = "02 - Secondary Categories/";
-            config.metadataTemplate = "[[04 - Templates/04 - Secondary Category/0401 - Metadata]]";
-            config.bodyTemplate = "[[04 - Templates/04 - Secondary Category/0402 - Body]]";
-            break;
+        case NOTE_TYPES.SECONDARY:
+            return {
+                ...baseConfig,
+                destination: `${PATHS.SECONDARY_CATEGORIES}/`,
+                metadataTemplate: PATHS.SECONDARY_TEMPLATE_META,
+                bodyTemplate: PATHS.SECONDARY_TEMPLATE_BODY
+            };
             
-        case "Content":
-            config.prefix = "";
-            config.destination = "03 - Content/";
-            config.contentType = contentTypeConfig;
-            config.metadataTemplate = `[[04 - Templates/04 - Content/${contentTypeConfig.templateNumber} - ${contentTypeConfig.name}/${contentTypeConfig.templateNumber}01 - Metadata]]`;
-            config.headerTemplate = `[[04 - Templates/04 - Content/${contentTypeConfig.templateNumber} - ${contentTypeConfig.name}/${contentTypeConfig.templateNumber}02 - Header]]`;
-            config.bodyTemplate = `[[04 - Templates/04 - Content/${contentTypeConfig.templateNumber} - ${contentTypeConfig.name}/${contentTypeConfig.templateNumber}03 - Body]]`;
-            break;
+        case NOTE_TYPES.CONTENT:
+            return {
+                ...baseConfig,
+                destination: `${PATHS.CONTENT}/`,
+                contentType: contentTypeConfig,
+                metadataTemplate: `[[04 - Templates/04 - Content/${contentTypeConfig.name}/Metadata]]`,
+                headerTemplate: `[[04 - Templates/04 - Content/${contentTypeConfig.name}/Header]]`,
+                bodyTemplate: `[[04 - Templates/04 - Content/${contentTypeConfig.name}/Body]]`
+            };
+            
+        default:
+            throw new Error(`Unsupported note type: ${noteType}`);
     }
-    
-    return config;
 }
 
-// Name: buildNote
-// Description: Creates the actual note content based on configuration
-// Returns: String containing the complete note content
-async function buildNote(config) {
-    // Load metadata template
-    let metadata = await tp.file.include(config.metadataTemplate);
+/**
+ * Builds the complete note content from templates and configuration
+ * @param {Object} config - Note configuration object
+ * @returns {Promise<string>} - Complete note content
+ */
+async function buildNoteContent(config) {
+    try {
+        // Load and customize metadata template
+        let metadata = await tp.file.include(config.metadataTemplate);
+        metadata = customizeMetadata(metadata, config);
+        
+        // Build page title (no prefixes needed)
+        const pageTitle = `# [[${config.title}]]`;
+        
+        // Load body template
+        const body = await tp.file.include(config.bodyTemplate);
+        
+        // Add timestamps
+        const timestamps = "\n*Created Date*: <%+tp.file.creation_date(\"MMMM Do YYYY (HH:mm a)\")%\>  \n*Last Modified Date*: \<%+tp.file.last_modified_date(\"MMMM Do YYYY (HH:mm a)\")%\>";
+        
+        // Assemble content based on note type
+        const contentParts = [metadata, pageTitle];
+        
+        if (config.noteType === NOTE_TYPES.CONTENT) {
+            const header = await tp.file.include(config.headerTemplate);
+            contentParts.push(header);
+        }
+        
+        contentParts.push(body, timestamps);
+        
+        return contentParts.join("\n");
+        
+    } catch (error) {
+        logError(error, "Building note content");
+        throw error;
+    }
+}
 
-    // Handle metadata modifications based on note type
+/**
+ * Customizes metadata template based on note configuration
+ * @param {string} metadata - Raw metadata template
+ * @param {Object} config - Note configuration
+ * @returns {string} - Customized metadata
+ */
+function customizeMetadata(metadata, config) {
+    let customizedMetadata = metadata;
+    
     switch(config.noteType) {
-        case "Primary":
+        case NOTE_TYPES.PRIMARY:
             if (config.emoji) {
-                metadata = metadata.replace(
+                customizedMetadata = customizedMetadata.replace(
                     'tags:\n  - 🥇Primary_Category\n  - ADD_NEW_PRIMARY_CATEGORY_EMOJI',
-                    `tags:\n  - 🥇Primary_Category\n  - ${config.emoji}${config.title.replace(/\s+/g, '_')}` // Replace spaces with underscores
+                    `tags:\n  - 🥇Primary_Category\n  - ${config.emoji}${config.title.replace(/\s+/g, '_')}`
                 );
             }
             break;
             
-        case "Secondary":
+        case NOTE_TYPES.SECONDARY:
             if (config.primaryCategories.length > 0) {
-                const primaryCatList = config.primaryCategories.join('\n  - ');
-                metadata = metadata.replace(
+                customizedMetadata = customizedMetadata.replace(
                     'primary categories:\n  - Add link(s) [[]] back to related PRIMARY categories',
-                    `primary categories:\n  - ${primaryCatList}`
+                    `primary categories:\n  - ${config.primaryCategories.join('\n  - ')}`
                 );
             }
             break;
             
-        case "Content":
+        case NOTE_TYPES.CONTENT:
+            // Update primary categories
             if (config.primaryCategories.length > 0) {
-                const primaryCatList = config.primaryCategories.join('\n  - ');
-                metadata = metadata.replace(
+                customizedMetadata = customizedMetadata.replace(
                     'primary categories:\n  - Add link(s) [[]] back to related PRIMARY categories',
-                    `primary categories:\n  - ${primaryCatList}`
+                    `primary categories:\n  - ${config.primaryCategories.join('\n  - ')}`
                 );
             }
             
+            // Update secondary categories
             if (config.secondaryCategories.length > 0) {
-                const secondaryCatList = config.secondaryCategories.join('\n  - ');
-                metadata = metadata.replace(
+                customizedMetadata = customizedMetadata.replace(
                     'secondary categories:\n  - Add link(s) [[]] back to related SECONDARY categories',
-                    `secondary categories:\n  - ${secondaryCatList}`
+                    `secondary categories:\n  - ${config.secondaryCategories.join('\n  - ')}`
                 );
             }
             break;
     }
     
-    // Build page title
-    const pageTitle = `# [[${config.prefix}${config.title}]]\n`;
+    return customizedMetadata;
+}
+
+//////////////////////////////////////////////////////////////////////////////////
+//                                MAIN WORKFLOW                                //
+//////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Main execution function - orchestrates the entire note creation workflow
+ * @returns {string} - Personalized or fallback note content
+ */
+async function executeNoteCreation() {
+    let config = null;
     
-    // Load body template
-    const body = await tp.file.include(config.bodyTemplate);
-    
-    // Add timestamps
-    const timestamps = "\n*Created Date*: <%+tp.file.creation_date(\"MMMM Do YYYY (HH:mm a)\")%\>  \n*Last Modified Date*: \<%+tp.file.last_modified_date(\"MMMM Do YYYY (HH:mm a)\")%\>";
-    
-    // For content notes, include header
-    if (config.noteType === "Content") {
-        const header = await tp.file.include(config.headerTemplate);
-        return metadata + pageTitle + header + body + timestamps;
-    } else {
-        return metadata + pageTitle + body + timestamps;
+    try {
+        console.log("=== Red Team Note Creation Started ===");
+        
+        // Step 1: Select note type
+        const noteType = await selectNoteType();
+        console.log(`Selected note type: ${noteType}`);
+        
+        // Step 2: Get and validate title
+        const title = await getValidatedNoteTitle(tp.file.title, noteType);
+        console.log(`Validated title: "${title}"`);
+        
+        // Step 3: Execute type-specific workflow
+        switch(noteType) {
+            case NOTE_TYPES.PRIMARY:
+                const emoji = await selectEmoji(title);
+                config = createNoteConfig({ noteType, title, emoji });
+                break;
+                
+            case NOTE_TYPES.SECONDARY:
+                const primaryCategories = await selectCategories("primary");
+                config = createNoteConfig({ noteType, title, primaryCategories });
+                break;
+                
+            case NOTE_TYPES.CONTENT:
+                const contentType = await selectContentType();
+                const contentPrimaryCategories = await selectCategories("primary");
+                const contentSecondaryCategories = await selectCategories("secondary");
+                config = createNoteConfig({ 
+                    noteType, 
+                    title, 
+                    primaryCategories: contentPrimaryCategories,
+                    secondaryCategories: contentSecondaryCategories,
+                    contentTypeConfig: contentType 
+                });
+                break;
+                
+            default:
+                throw new Error(`Unsupported note type: ${noteType}`);
+        }
+        
+        // Step 4: Move file to correct location
+        await tp.file.move(config.destination + config.title);
+        console.log(`File moved to: ${config.destination + config.title}`);
+        
+        // Step 5: Build and return note content
+        const noteContent = await buildNoteContent(config);
+        console.log("=== Note Creation Completed Successfully ===");
+        
+        return noteContent;
+        
+    } catch (error) {
+        logError(error, "Note creation workflow");
+        showNotice("❌ Note creation failed. Check console for details.");
+        
+        // Return minimal fallback content
+        return `# ${tp.file.title || "New Note"}\n\n## Overview\n\n*Note creation encountered an error. Please try again or create manually.*\n\n---\n\n*Created Date*: <%+tp.file.creation_date(\"MMMM Do YYYY (HH:mm a)\")%\>  \n*Last Modified Date*: \<%+tp.file.last_modified_date(\"MMMM Do YYYY (HH:mm a)\")%\>`;
     }
 }
 
 //////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////// Main //////////////////////////////////////
+//                                  EXECUTION                                  //
 //////////////////////////////////////////////////////////////////////////////////
 
-// Definitions:
-// Note - A file created in either the Primary Category, Secondary Category, or Content sub-directories
-// Note Type - A Primary Category, Secondary Category, or Content Note
-// Primary Category - The highest-level form of a note in Zettelkasten (e.g., "Penetration Test", "Red Team", or "Vault Administration"); Primary Categories are stored in the "01 - Primary Categories" directory, built with the "04 - Templates/04 - Primary Categories" template structures, have the "🥇Primary_Category" Search Tag, and individual Primary Categories have their own additional Search Tag (e.g., the "Penetration Test" Primary Category has the Search Tags "🥇Primary_Category" and "🎯Penetration_Test" Search Tags)
-// Secondary Category - An intermediate-level form of a note in Zettelkasten (e.g., "Active Directory", "Metasploit", or "Post-Exploitation"); Secondary Categories are stored in the "02 - Secondary Categories" directory, built with the "04 - Templates/04 - Secondary Categories" template structures, and only have the "🥈Secondary_Category" Search Tag
-// Content/Atomic Note - The lowest-level form of a note in Zettelkasten (e.g., "Admonition", "Obsidian - Linking Content", or "Templater"); Content Notes are stored in the "03 - Content" directory, built with their own individual template structures (e.g., a "Basic" Content Type is built with the structures located at "04 - Templates/04 - Content/0401 - Basic"), and are assigned a Search Tag based on the Content Type used to originally build the note (e.g., the "Basic" Content Type has the Search Tag "📝Basic")
-// Content Type - A general framework for building Content/Atomic Notes that leverages individualized template structures in the "04 - Templates/04 - Content" directory
-// Search Tag - A unique emoji postfixed with the Note title, replacing whitespace characters with underscore characters (e.g., "🥇Primary_Category", "✍️Reporting", or "💣Payload")
+// Execute the main workflow and return the generated content
+const generatedContent = await executeNoteCreation();
 
-let noteContent = "";
-
-try {
-	// 1. User selects Note Type. Options are:
-	// - 🥇 (Primary Category) -> "Primary"
-	// - 🥈 (Secondary Category) -> "Secondary"
-	// - ⚛️ (Content/Atomic Note) -> "Content"
-	const noteType = await setNoteType();
-	
-	switch(noteType) {
-		case "Primary":
-			// 1.1. Primary Category workflow
-            let primaryTitle = tp.file.title;
-
-            // 1.1.1. Get valid title
-            primaryTitle = await setTitle(primaryTitle, noteType);
-	
-            // 1.1.2. Get emoji for category
-            const categoryEmoji = await smartEmojiSelector(primaryTitle);
-            
-            // 1.1.3. Build config and create Note
-            config = await getNoteConfig(noteType, primaryTitle, [], [], null, categoryEmoji);
-            break;
-    
-		case "Secondary":
-            // 1.2. Secondary Category workflow
-            let secondaryTitle = tp.file.title;
-		
-            // 1.2.1. Get valid title
-            secondaryTitle = await setTitle(secondaryTitle, noteType);
-            
-            // 1.2.2. Select Primary Categories to link back to
-            const linkedPrimaryCategories = await selectCategories("primary");
-            
-            // 1.2.3. Build config and create Note
-            config = await getNoteConfig(noteType, secondaryTitle, linkedPrimaryCategories, []);
-            break;
-            
-		case "Content":
-            // 1.3. Content/Atomic Note workflow
-            let contentTitle = tp.file.title;
-            
-            // 1.3.1. Get valid title
-            contentTitle = await setTitle(contentTitle, noteType);
-            
-            // 1.3.2. Select Content Type or create new one
-            const selectedContentType = await setContentType();
-            
-            // 1.3.3. Select Primary Categories to link back to
-            const contentPrimaryCategories = await selectCategories("primary");
-            
-            // 1.3.4. Select Secondary Categories to link back to
-            const contentSecondaryCategories = await selectCategories("secondary");
-            
-            // 1.3.5. Build Note config
-            config = await getNoteConfig(noteType, contentTitle, contentPrimaryCategories, contentSecondaryCategories, selectedContentType);
-            break;
-	}
-
-	// 2. Move file to appropriate destination
-    await tp.file.move(config.destination + config.prefix + config.title);
-
-	// 3. Build and return the Note content
-    noteContent = await buildNote(config);
-    
-} catch (error) {
-    new Notice(`Error creating note: ${error.message}`);
-    console.log("Note creation error:", error);
-}
-
-%><%* tR += `${noteContent}` %>
+%><%* tR += `${generatedContent}` %>

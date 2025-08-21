@@ -1,13 +1,13 @@
 ---
-aliases: 
+aliases:
 tags:
   - 🗺️Mindmap
 primary categories:
-  - "[[01 - Training]]"
-  - "[[01 - Penetration Test]]"
-  - "[[01 - Red Team]]"
+  - "[[Training]]"
+  - "[[Penetration Test]]"
+  - "[[Red Team]]"
 secondary categories:
-  - "[[02 - Active Directory]]"
+  - "[[Active Directory]]"
 type: Mindmap
 ---
 # [[AD - mindmap 2025 - 03]]

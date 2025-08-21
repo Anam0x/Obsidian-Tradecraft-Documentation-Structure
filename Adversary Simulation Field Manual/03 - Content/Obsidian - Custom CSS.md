@@ -1,11 +1,11 @@
 ---
-aliases: 
+aliases:
 tags:
   - 📝Basic
 primary categories:
-  - "[[01 - Vault Administration]]"
+  - "[[Vault Administration]]"
 secondary categories:
-  - "[[02 - Obsidian]]"
+  - "[[Obsidian]]"
 type: Basic
 ---
 # [[Obsidian - Custom CSS]]  
@@ -23,12 +23,9 @@ To enable custom styling within Obsidian, you'll need to:
 
 ![[Pasted image 20210907125653.png]]
 
-
 4. After the files are present within the file structure, again path to `Settings > Appearences` and click the `refresh` icon next to the folder icon we chose previously. All individual `.css` files should now be listed as toggle-able style options.
 
 ![[Pasted image 20210907125817.png]]
-
-
 
 ## Snippet Library
 
@@ -40,6 +37,7 @@ Recolor  `unresolved` or non-existent notes to show up in graph view as dark red
 While Obsidian exposes the ability to colorize the graph view using groups, there doesnt seem to yet be a way to colorize unresolved notes. For this we'll use a CSS snippet. 
 
 #### CSS Snippet
+
 ```ad-example
 title: Colorize Graph Nodes
 collapse: Yes
@@ -51,17 +49,18 @@ icon: triforce
 ```
 
 #### Example
+
 ![[Obsidian - Linking Content (Old)#Before]]
 ![[Obsidian - Linking Content (Old)#After]]
-
-
 
 ### 2. Colorized Tag Pills
 
 #### Description
+
 Add colored 'pill' styling around search tags.
 
 #### CSS Snippet
+
 ```ad-example
 title: Colorize Graph Nodes
 collapse: Yes
@@ -118,15 +117,17 @@ div:not(.CodeMirror-activeline) > .CodeMirror-line span.cm-hashtag-end:before {
 ```
 
 #### Example
-![[Pasted image 20210907122512.png]]
 
+![[Pasted image 20210907122512.png]]
 
 ### 3. Current Line Focus
 
 #### Description
+
 Using the VIM community plugin, colors the current line in focus  when in insert mode for improved readability
 
 #### CSS Snippet
+
 ```ad-example
 ~~~CSS
 /* Modified by Christian (Chhrriissyy#6548). Original by MooddooM */
@@ -154,15 +155,17 @@ Using the VIM community plugin, colors the current line in focus  when in insert
 ```
 
 #### Example
-![[highlight_currentline.gif]]
 
+![[highlight_currentline.gif]]
 
 ### 4. Enlarge Image on Hover
 
 #### Description
+
 In preview mode, enlarges images/gifs when you hover over them.
 
 #### CSS Snippet
+
 ```ad-example
 ~~~CSS
 .markdown-preview-view img {
@@ -184,14 +187,17 @@ In preview mode, enlarges images/gifs when you hover over them.
 ```
 
 #### Example
+
 ![[highlight_currentline 1.gif]]
 
-
 ### 5. Embed Without a Scroll Bar
+
 #### Description
+
 Embedded windows or references to Obsidian locations will render expanded and not within a static div size + scrollbar.
 
 #### CSS Snippet
+
 ```ad-example
 ~~~CSS
 /* Remove scroll bar from transclusions */
@@ -212,9 +218,11 @@ max-height: unset;
 ### 6. External Resource Embed Styles
 
 #### Description
+
 Attempt to make externally embedded content  more responsive
 
 #### CSS Snippet
+
 ```ad-example
 ~~~CSS
 /* responsive img/iframe defintion */
@@ -246,8 +254,8 @@ Attempt to make externally embedded content  more responsive
 ```
 
 #### Example
-![[responsive_yt.gif]]
 
+![[responsive_yt.gif]]
 
 ___
 

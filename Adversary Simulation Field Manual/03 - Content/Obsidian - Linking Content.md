@@ -1,11 +1,11 @@
 ---
-aliases: 
+aliases:
 tags:
   - 📝Basic
 primary categories:
-  - "[[01 - Vault Administration]]"
+  - "[[Vault Administration]]"
 secondary categories:
-  - "[[02 - Obsidian]]"
+  - "[[Obsidian]]"
 type: Basic
 ---
 # [[Obsidian - Linking Content]]  
@@ -38,20 +38,20 @@ type: Basic
 2. Example:
 	1. Over time a vault grows and several links are created to a recurring category that is not yet created. Links with no associated note can be readily identified:
 		1. from a note's preview pane as they'll be displayed with a faded text
+		2. from the graph's view, where unlinked notes/nodes will appear in a different color
 		
 ![[Pasted image 20210907120756.png]]
-		2. from the graph's view, where unlinked notes/nodes will appear in a different color
-
-
 
 ```ad-important
 If you're using included CSS snippets nonexistant nodes become a bit more visable as they're colored dark red.
 ```
 
 ### Before:
+
 ![[Pasted image 20210907120838.png]]
 
 ### After:
+
 ![[Pasted image 20210907121102.png]]
 
 4. "Unlinked Mentions" as these unlinked notes are refered to, can then be created simply by clicking the identified unlinked *link* or *node*
@@ -62,12 +62,11 @@ If you're using included CSS snippets nonexistant nodes become a bit more visabl
 
 ## Resources
 
-| Hyperlink | Info |
-| --------- | ---- |
-|           |      |
+| Hyperlink                                                                                                                           | Info                                                  |
+| ----------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------- |
+| [*Obsidian, Taming a Collective Consciousness* by Sam Link](https://trustedsec.com/blog/obsidian-taming-a-collective-consciousness) | Example implementation of Zettelkasten using Obsidian |
 
 ***
 
 *Created Date*: <%+tp.file.creation_date("MMMM Do YYYY (HH:mm a)")%>  
 *Last Modified Date*: <%+tp.file.last_modified_date("MMMM Do YYYY (HH:mm a)")%>
-

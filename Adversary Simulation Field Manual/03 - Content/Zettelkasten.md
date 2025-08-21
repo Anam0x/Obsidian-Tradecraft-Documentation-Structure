@@ -4,13 +4,15 @@ aliases:
 tags:
   - 📝Basic
 primary categories:
-  - "[[01 - Training]]"
+  - "[[Training]]"
 secondary categories:
-  - "[[02 - Learning Techniques]]"
+  - "[[Learning Techniques]]"
 type: Basic
 ---
 # [[Zettelkasten]]
+
 ***
+
 ## Overview
 
 Niklas Luhmann's Zettelkasten (German for "slip-box") was a physical index-card system for managing atomic ideas through unique identifiers and cross-references, enabling non-linear exploration that helped him produce prolific work. Unlike isolated flashcards, the Zettelkasten's strength lies in its network of interconnected notes — a concept modern tools like Obsidian replicate digitally using Markdown-linked notes. As highlighted in TrustedSec's blog post *Obsidian, Taming a Collective Consciousness*, this approach can transform siloed documentation into a living, interconnected knowledge base that evolves continuously.

@@ -5,13 +5,13 @@ tags:
   - ⚔️Tool
   - T1558003
 primary categories:
-  - "[[01 - Red Team]]"
-  - "[[01 - Penetration Test]]"
+  - "[[Red Team]]"
+  - "[[Penetration Test]]"
 secondary categories:
-  - "[[02 - Active Directory]]"
-  - "[[02 - Credential Harvesting]]"
-  - "[[02 - Kerberoasting]]"
-  - "[[02 - Post-Exploitation]]"
+  - "[[Active Directory]]"
+  - "[[Credential Harvesting]]"
+  - "[[Kerberoasting]]"
+  - "[[Post-Exploitation]]"
 type: Tool
 ---
 # [[GetUserSPNs.py]]
@@ -143,6 +143,7 @@ connection:
 ```
 
 ***
+
 ## Resources
 
 | Hyperlink                                                                                        | Info                                                   |

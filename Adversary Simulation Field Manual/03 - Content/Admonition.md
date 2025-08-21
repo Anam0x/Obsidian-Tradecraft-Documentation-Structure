@@ -1,11 +1,11 @@
 ---
-aliases: 
+aliases:
 tags:
   - 📝Basic
 primary categories:
-  - "[[01 - Vault Administration]]"
+  - "[[Vault Administration]]"
 secondary categories:
-  - "[[02 - Obsidian]]"
+  - "[[Obsidian]]"
 type: Basic
 ---
 # [[Admonition]]

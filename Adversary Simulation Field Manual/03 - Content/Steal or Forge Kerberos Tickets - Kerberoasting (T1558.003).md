@@ -5,13 +5,13 @@ aliases:
 tags:
   - 📕TTP
 primary categories:
-  - "[[01 - Penetration Test]]"
-  - "[[01 - Red Team]]"
+  - "[[Penetration Test]]"
+  - "[[Red Team]]"
 secondary categories:
-  - "[[02 - Active Directory]]"
-  - "[[02 - Credential Harvesting]]"
-  - "[[02 - Kerberoasting]]"
-  - "[[02 - Post-Exploitation]]"
+  - "[[Active Directory]]"
+  - "[[Credential Harvesting]]"
+  - "[[Kerberoasting]]"
+  - "[[Post-Exploitation]]"
 type: TTP
 ---
 # [[Steal or Forge Kerberos Tickets - Kerberoasting (T1558.003)]]
@@ -19,7 +19,7 @@ type: TTP
 ***
 ## Overview
 
-> ⚠️ **Note:** The content in this page is directly adapted from the [MITRE ATT&CK](https://attack.mitre.org/techniques/T1558/003/) framework for personal reference. Please consult the original MITRE ATT&CK entry for the most up-to-date and complete information.
+> ℹ️ **Note:** The content in this page is directly adapted from the [MITRE ATT&CK](https://attack.mitre.org/techniques/T1558/003/) framework for personal reference. Please consult the original MITRE ATT&CK entry for the most up-to-date and complete information.
 
 Adversaries may abuse a valid Kerberos ticket-granting ticket (TGT) or sniff network traffic to obtain a ticket-granting service (TGS) ticket that may be vulnerable to [Brute Force](https://attack.mitre.org/techniques/T1110)[^1][^2].
 

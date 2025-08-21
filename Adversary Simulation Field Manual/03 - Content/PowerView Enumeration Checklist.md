@@ -5,12 +5,12 @@ aliases:
 tags:
   - ✅Playbook
 primary categories:
-  - "[[01 - Penetration Test]]"
-  - "[[01 - Red Team]]"
+  - "[[Penetration Test]]"
+  - "[[Red Team]]"
 secondary categories:
-  - "[[02 - Active Directory]]"
-  - "[[02 - Post-Exploitation]]"
-  - "[[02 - Domain Enumeration]]"
+  - "[[Active Directory]]"
+  - "[[Post-Exploitation]]"
+  - "[[Domain Enumeration]]"
 type: Playbook
 ---
 # [[PowerView Enumeration Checklist]]

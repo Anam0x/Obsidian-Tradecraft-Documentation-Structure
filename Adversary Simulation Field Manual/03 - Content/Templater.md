@@ -1,11 +1,11 @@
 ---
-aliases: 
+aliases:
 tags:
   - 📝Basic
 primary categories:
-  - "[[01 - Vault Administration]]"
+  - "[[Vault Administration]]"
 secondary categories:
-  - "[[02 - Obsidian]]"
+  - "[[Obsidian]]"
 type: Basic
 ---
 # [[Templater]]
@@ -19,12 +19,13 @@ type: Basic
 ![templater_demo](https://github.com/SilentVoid13/Templater/blob/561ac7bb30dbc2aff6aeab0dd7aa9883bef4fca8/imgs/templater_demo.gif?raw=true)
 
 ## How we'll use Templater
+
 - Prompt for the Search tag on note creation
 - Prompt for title on note creation
 - Add date *created* automatically
 - Update *last updated* automatically
 - Move the note to the appropriate location
- 	- 02 - Secondary Categories
+	* 02 - Secondary Categories
 	- 03 - Content
 	- 05 - Personal
 
@@ -54,8 +55,6 @@ ___
 | ------------------------------------------------------------------------- | ---- |
 | [Templater Github Repo](https://github.com/SilentVoid13/Templater)        |      |
 | [Templater Documentation](https://silentvoid13.github.io/Templater/docs/) |      |
-
-[^1]: 
 
 ***
 

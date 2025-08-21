@@ -2,60 +2,66 @@
 
 ## Not Started
 
-- [ ] Bugs
-  - [ ] Unable to invoke Templater script by clicking the "New Note" icon (currently only works by right-clicking directory and selecting "New Note" option)
-    - [ ] Would have to set Templater to run at the root of the vault; unsure if this is the desired behavior
-  - [ ] Some emojis (e.g., m/f detective) are not valid characters for tags
-  - [ ] Debrief and lab setup emojis not being detected
-
-- [ ] Figure out what to do with seemingly obsolete "Header" template structure element
-
-- [ ] Add designated section for unfinished ideas (reintroduce the "Personal" directory?)
-
-- [ ] Add Python script to scrape MITRE ATT&CK Framework and generate TTP notes
-
-## In Progress
-
-### Highest Priority
-
-- [ ] Add more scripting logic
-  - [x] Prompt to create new search tag for all new primary categories
-  - [x] Prompt to pre-populate metadata links in new secondary categories with primary categories
-  - [x] Prompt to pre-populate metadata links in new content notes with primary and secondary categories
-  - [x] Fixed issue where empty files were being created if operation was cancelled by forcing each step to loop until a valid option is chosen; this comes with the tradeoff of limiting user agency and becoming "trapped" in a workflow, but is acceptable
-  - [x] Adding and removing content types (e.g., "TTP", "Tool", "Basic")
-  - [ ] Error/interrupted execution flow handling
-  - [ ] Clean code
-
-### Medium Priority
-
-- [ ] git support
-  - [ ] .gitignore
-  - [ ] Setup instructions added to README
-
-### Lowest Priority
-
-- [ ] Provide installation instructions (either in README or in a scripts directory)
-  - [ ] Content page for modifying vault structure (i.e., primary/secondary categories, content types, templates)
-    - [ ] Instructions
-    - [ ] GIFs
-  - [ ] Linux, Windows, macOS support (at the very least, a dedicated section in the README)
-  - [ ] Automatically install, enable, configure required community plugins
-
-- [ ] Consider replacing `PowerView Enumeration Checklist` with a single `PowerView - Enumerate Users` note to maintain principle of atomicity
+- [ ] Modify the "Obsidian - Getting Started" note to indicate that this fork was created by Anam0x and inspired by TrustedSec
 
 - [ ] Add style guide to root of vault
   - [ ] Split up the style guide into atomic notes
   - [ ] What should the difference between links in the "Resources" table and footnotes be?
 
-- [ ] Break up the "Zettelkasten" note into multiple atomic notes
-  - [ ] Biography content type for Niklas Luhmann
-  - [ ] Idea content type for atomic notes
-  - [ ] Consider other methods for reducing the note
+## In Progress
+
+### Highest Priority (Blocking Issues)
+
+- [ ] Git support + .gitignore + README
+- [ ] Fix emoji detection/regex issues and confirm why some emojis (e.g., m/f detective) are not valid characters for tags
+- [ ] Critical error handling
+  - [ ] Sanitize file names
+  - [ ] Infinite recursion in `getValidatedNoteTitle` and `getValidatedContentTypeTitle` (these two functions could probably be merged)
+  - [ ] Templater plugin dependency (check if available first)
+  - [ ] Validate template content before processing
+  - [ ] Array bounds issues with `allEmojis` constant
+  - [ ] Potentially reading stale metadata in `getAvailableContentTypes`
+
+### High Priority (Core Functionality and Usability)
+
+- [ ] Provide template for new content types (e.g., "Command", "Idea", "IOC")
+- [ ] Header/Footer template restructuring (impacts all new notes)
+  - [ ] Replace "Header" with "Footer"
+  - [ ] Create a utility function to add a dividing line between individual template structures
+  - [ ] Remove the "Resources" table and footnotes from all content templates and move them to the new "Footer" element
+  - [ ] Update main script
+- [ ] Installation instructions (enables adoption)
+  - [ ] README
+  - [ ] Rewrite the "Vault Appendix - Modifying Vault Structure" note
+  - [ ] Linux, Windows, macOS, Android, iOS support
+  - [ ] Automatically install, enable, configure required community plugins (if possible)
+
+### Medium Priority (Enhancement)
+
+- [ ] Add Python script to scrape MITRE ATT&CK Framework and generate TTP notes
+- [ ] Personal/unfinished ideas directory
+- [ ] Example notes for new content types (e.g., Command, Idea, IOC)
+  - [ ] Consider adding example notes for each new content type
+
+### Low Priority (Cleanup/Polish)
+
+- [ ] Break up large notes (PowerView, Zettelkasten) to maintain principle of atomicity
+- [ ] Race condition handling (low probability for personal use)
 
 ## Done ✓
 
-- [x] Rename "Debrief" to "Case Study" and optionally change emoji (a "case study" covers both personal reflection post-engagement and formal analysis of publicly referenceable attacks/incidents)
+- [x] Removed unnecessary prefixes from notes
+  - [x] Renaming links
+
+- [x] Add more scripting logic
+  - [x] Prompt to create new search tag for all new primary categories
+  - [x] Prompt to pre-populate metadata links in new secondary categories with primary categories
+  - [x] Prompt to pre-populate metadata links in new content notes with primary and secondary categories
+  - [x] Fixed issue where empty files were being created if operation was cancelled by forcing each step to loop until a valid option is chosen; this comes with the tradeoff of limiting user agency and becoming "trapped" in a workflow, but is acceptable
+  - [x] Adding and removing content types (e.g., "TTP", "Tool", "Basic")
+  - [x] Clean code
+
+- [x] Rename "Debrief" to "Case Study" (a "case study" covers both personal reflection post-engagement and formal analysis of publicly referenceable attacks/incidents)
 
 - [x] Content type ideas
   - [x] Idea (bulb)
@@ -64,6 +70,7 @@
   - [x] IOC (footprints)
   - [x] Lab Setup (test tube)
   - [x] Command (dollar sign)
+  - [x] Artificial Intelligence (brain)
 
 - [x] Primary category ideas
   - [x] Social Engineering (theater mask emoji as the special search tag)
