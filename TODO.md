@@ -2,18 +2,27 @@
 
 ## Not Started
 
+- [ ] Modify templates to include a Dataview query section that pulls all notes backlinked to that category
+  - [ ] Footer or body?
+
 - [ ] Modify the "Obsidian - Getting Started" note to indicate that this fork was created by Anam0x and inspired by TrustedSec
 
 - [ ] Add style guide to root of vault
   - [ ] Split up the style guide into atomic notes
   - [ ] What should the difference between links in the "Resources" table and footnotes be?
 
+- [ ] Git support
+  - [ ] .gitignore
+  - [ ] README
+  - [ ] Update Obsidian Git note
+  - [ ] Setup scripts
+   - [ ] Bash for *NIX-like
+   - [ ] PowerShell for Windows
+
 ## In Progress
 
 ### Highest Priority (Blocking Issues)
 
-- [ ] Git support + .gitignore + README
-- [ ] Fix emoji detection/regex issues and confirm why some emojis (e.g., m/f detective) are not valid characters for tags
 - [ ] Critical error handling
   - [ ] Sanitize file names
   - [ ] Infinite recursion in `getValidatedNoteTitle` and `getValidatedContentTypeTitle` (these two functions could probably be merged)
@@ -25,6 +34,7 @@
 ### High Priority (Core Functionality and Usability)
 
 - [ ] Provide template for new content types (e.g., "Command", "Idea", "IOC")
+  - [ ] Replace all blockquote template instances with admonition block-styled content
 - [ ] Header/Footer template restructuring (impacts all new notes)
   - [ ] Replace "Header" with "Footer"
   - [ ] Create a utility function to add a dividing line between individual template structures
@@ -49,6 +59,10 @@
 - [ ] Race condition handling (low probability for personal use)
 
 ## Done ✓
+
+- [x] Emoji issues
+  - [x] Fix emoji detection/regex issues
+  - [x] Obsidian does not like Zero Width Joiner (U+200D) sequence emojis as tags; implement logic to warn users before attempting to assign ZWJ emoji as search tag
 
 - [x] Removed unnecessary prefixes from notes
   - [x] Renaming links

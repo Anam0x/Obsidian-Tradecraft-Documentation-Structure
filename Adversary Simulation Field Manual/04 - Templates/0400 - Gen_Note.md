@@ -39,7 +39,7 @@ const NOTE_TYPES = {
 
 const RESERVED_EMOJIS = new Set(['🥇', '🥈', '⚛️']);
 
-const EMOJI_REGEX = /[\u{1F600}-\u{1F64F}]|[\u{1F300}-\u{1F5FF}]|[\u{1F680}-\u{1F6FF}]|[\u{1F1E0}-\u{1F1FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]/u;
+const EMOJI_REGEX = /[\u{1F600}-\u{1F64F}]|[\u{1F300}-\u{1F5FF}]|[\u{1F680}-\u{1F6FF}]|[\u{1F1E0}-\u{1F1FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]|[\u{1F900}-\u{1F9FF}]|[\u{1FA70}-\u{1FAFF}]|[\u{2300}-\u{23FF}]|[\u{2B50}]|[\u{2194}-\u{21AA}]|[\u{231A}-\u{231B}]|[\u{25AA}-\u{25FE}]/u;
 
 //////////////////////////////////////////////////////////////////////////////////
 //                              UTILITY FUNCTIONS                              //
@@ -406,6 +406,36 @@ async function selectEmoji(itemName) {
 }
 
 /**
+ * Detects if an emoji contains Zero Width Joiner sequences that break Obsidian tags
+ * @param {string} emoji - Emoji string to analyze
+ * @returns {Object} - Analysis result
+ */
+function analyzeEmojiForObsidianTags(emoji) {
+    if (!emoji || emoji.length === 0) {
+        return {
+            isTagSafe: false,
+            reason: "Empty input"
+        };
+    }
+    
+    const codepoints = Array.from(emoji).map(char => char.codePointAt(0));
+    const hasZWJ = codepoints.includes(0x200D); // Zero Width Joiner
+    
+    if (hasZWJ) {
+        return {
+            isTagSafe: false,
+            reason: "Contains Zero Width Joiner (family/profession emoji)",
+            codepoints: codepoints.map(cp => `U+${cp.toString(16).toUpperCase().padStart(4, '0')}`)
+        };
+    }
+    
+    return {
+        isTagSafe: true,
+        reason: "Should work fine in Obsidian tags"
+    };
+}
+
+/**
  * Handles manual emoji entry with validation
  * @returns {Promise<string>} - Validated emoji or fallback
  */
@@ -423,12 +453,39 @@ async function handleManualEmojiEntry() {
             return "📁";
         }
         
-        if (EMOJI_REGEX.test(manualEmoji)) {
-            return manualEmoji;
+        if (!EMOJI_REGEX.test(manualEmoji)) {
+            attempts++;
+            showNotice(`That doesn't appear to be a valid emoji. ${maxAttempts - attempts} attempts remaining.`);
+            continue;
         }
         
-        attempts++;
-        showNotice(`That doesn't appear to be a valid emoji. ${maxAttempts - attempts} attempts remaining.`);
+        // Check specifically for ZWJ sequences
+        const analysis = analyzeEmojiForObsidianTags(manualEmoji);
+        
+        if (!analysis.isTagSafe) {
+            // Show detailed warning as a notice first
+			showNotice(`⚠️ Complex emoji detected: "${manualEmoji}" contains Zero Width Joiner (ZWJ) sequences. Emojis with ZWJ sequences (e.g., 👨‍💻, 🕵️‍♂️) may cause tag display issues in Obsidian.`);
+
+			const proceed = await tp.system.suggester(
+			    ["✅ Use anyway", "❌ Try different emoji"],
+			    [true, false],
+			    false,
+			    "Continue with this emoji?"
+			);
+            
+            if (proceed) {
+                showNotice(`⚠️ Using ZWJ emoji: ${manualEmoji}`);
+                return manualEmoji;
+            } else {
+                attempts++;
+                if (attempts < maxAttempts) {
+                    showNotice(`Please try a different emoji. ${maxAttempts - attempts} attempts remaining.`);
+                }
+                continue;
+            }
+        }
+        
+        return manualEmoji;
     }
     
     showNotice("Max attempts reached. Using fallback emoji 📁");
