@@ -24,12 +24,31 @@
 ### Highest Priority (Blocking Issues)
 
 - [ ] Critical error handling
-  - [ ] Sanitize file names
-  - [ ] Infinite recursion in `getValidatedNoteTitle` and `getValidatedContentTypeTitle` (these two functions could probably be merged)
-  - [ ] Templater plugin dependency (check if available first)
+  - [ ] ~~Sanitize file names (illegal characters, starts with a dot, Windows reserved names)~~
+  - [x] Valid note file name
+    - [x] Empty/undefined/default
+    - [x] Leading dots
+    - [x] Illegal chars
+    - [x] Windows reserved names
+    - [x] Trailing dots/whitespace (allowed on Linux, potentially problematic for Windows)
+    - [x] Duplicate file names
+    - [x] Mixed content
+    - [X] Invisible characters
+  - [x] Valid emoji search tag
+    - [x] Empty/undefined
+    - [x] Non-emoji character
+    - [x] Zero Width Joiner (ZWJ)
+    - [x] Multiple emojis
+    - [ ] ~~Mixed text and emojis~~ (implicitly covered by checking for single-char input matching emoji regex)
+    - [x] Reserved emojis
+    - [x] Whitespace
+    - [x] Invisible characters
+  - [x] Infinite recursion in `getValidatedNoteTitle` and `getValidatedContentTypeTitle` (merged into `getValidatedNoteTitle`)
+  - [ ] ~~Templater plugin dependency (check if available first)~~ (likely unnecessary since Templater scripts can't run without Templater)
   - [ ] Validate template content before processing
-  - [ ] Array bounds issues with `allEmojis` constant
+  - [ ] ~~Array bounds issues with `allEmojis` constant~~ (negated in latest commit)
   - [ ] Potentially reading stale metadata in `getAvailableContentTypes`
+  - [ ] Figure out how to handle instances of untitled notes being created after error being thrown
 
 ### High Priority (Core Functionality and Usability)
 

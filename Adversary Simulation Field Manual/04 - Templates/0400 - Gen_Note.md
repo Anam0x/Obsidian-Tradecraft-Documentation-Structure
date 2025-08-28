@@ -32,12 +32,33 @@ const PATHS = {
 };
 
 const NOTE_TYPES = {
-    PRIMARY: "Primary",
-    SECONDARY: "Secondary", 
-    CONTENT: "Content"
+    PRIMARY: "Primary Category",
+    SECONDARY: "Secondary Category", 
+    CONTENT: "Content",
+    CONTENT_TYPE: "Content Type"
+};
+
+const EMOJI_SELECTION = {
+    TYPES: {
+        UTILITIES: "UTILITIES_",
+        MANUAL: "MANUAL_ENTRY", 
+        RANDOM: "RANDOM"
+    },
+    DISPLAY_TEXT: {
+	    UTILITIES: "--- Utilities ---",
+        MANUAL: "✏️ Enter emoji manually",
+        RANDOM: "🎲 Random selection"
+    },
+    DEFAULT_EMOJI: "📁"
 };
 
 const RESERVED_EMOJIS = new Set(['🥇', '🥈', '⚛️']);
+
+const ILLEGAL_CHARS = /[<>:"/\\|?*\x00-\x1F]/g;
+
+const INVISIBLE_CHARS = /[\u200B-\u200F\u202A-\u202E\u2060-\u206F\uFEFF]/;
+
+const RESERVED_NAMES = /^(CON|PRN|AUX|NUL|COM[1-9]|LPT[1-9])(\.|$)/i;
 
 const EMOJI_REGEX = /[\u{1F600}-\u{1F64F}]|[\u{1F300}-\u{1F5FF}]|[\u{1F680}-\u{1F6FF}]|[\u{1F1E0}-\u{1F1FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]|[\u{1F900}-\u{1F9FF}]|[\u{1FA70}-\u{1FAFF}]|[\u{2300}-\u{23FF}]|[\u{2B50}]|[\u{2194}-\u{21AA}]|[\u{231A}-\u{231B}]|[\u{25AA}-\u{25FE}]/u;
 
@@ -68,31 +89,192 @@ function logError(error, context, fallback = null) {
 }
 
 /**
- * Validates that a title is usable (not empty, not default, not duplicate)
+ * Enhanced validation for note titles with comprehensive error handling
  * @param {string} title - Title to validate
  * @param {string} destinationPath - Full path where note would be created
  * @param {boolean} isNote - Boolean indicating whether title is for a future note (true) or content type (false)
- * @returns {Promise<boolean>} - True if title is valid
+ * @returns {Promise<{isValid: boolean, error?: string, sanitized?: string}>} - Validation result with optional sanitized version
  */
 async function isValidTitle(title, destinationPath, isNote) {
+    const itemType = isNote ? "note" : "content type";
+    const trimmedTitle = title.trim();
+    
     // Check for empty, undefined, or default titles
     if (!title || 
         title.includes('Untitled') || 
-        title.trim() === "") {
-        const message = isNote ? "Please provide a distinct note title" : "Please provide a distinct content type title";
-        showNotice(message);
-        return false;
+        trimmedTitle === "") {
+        return {
+            isValid: false,
+            error: `Title cannot be empty or be the default "Untitled" value`,
+            suggestion: `Provide a distinct ${itemType} title`
+        };
+    }
+
+	// Check for leading dots
+	if (trimmedTitle.startsWith('.')) {
+        return {
+            isValid: false,
+            error: `Title cannot start with a dot (.) character`,
+            suggestion: `Try: "${trimmedTitle.substring(1) || 'Hidden File'}" or add a prefix`
+        };
+    }
+
+	// Check for illegal filename characters
+    const illegalMatches = trimmedTitle.match(ILLEGAL_CHARS);
+    if (illegalMatches) {
+        const uniqueChars = [...new Set(illegalMatches)];
+        return {
+            isValid: false,
+            error: `Title contains characters that aren't allowed in filenames: ${uniqueChars.join(', ')}`,
+            suggestion: `Replace these characters with spaces, hyphens, or underscores`
+        };
+    }
+
+	// Check for Windows reserved names (case-insensitive)
+    if (RESERVED_NAMES.test(trimmedTitle)) {
+        return {
+            isValid: false,
+            error: `"${trimmedTitle}" is reserved by Windows and cannot be used as a filename`,
+            suggestion: `Try adding a prefix or suffix, like "${trimmedTitle} Notes" or "My ${trimmedTitle}"`
+        };
+    }
+	
+	// Check for excessively long titles (to encourage conciseness, the character limit is currently 100, which is well below the typical 255-byte filename limit of most OSs)
+	if (title.length > 100) {
+        return {
+            isValid: false,
+            error: `Title is too long (${title.length} characters, maximum is 100)`,
+            suggestion: `Try shortening it or using abbreviations`
+        };
     }
     
+	// Check for trailing dots and whitespace characters (problematic on Windows)
+	if (title !== title.replace(/[. ]+$/, '')) {
+        return {
+            isValid: false,
+            error: `Title cannot end with dots or spaces (Windows compatibility issue)`,
+            suggestion: `Remove the trailing characters or replace with underscores`
+        };
+    }
+
+	// Check for emojis mixed with text (might be intentional but worth flagging; can cause file explorer issues)
+	const hasEmojis = EMOJI_REGEX.test(trimmedTitle);
+	
+	if (hasEmojis) {
+	    return {
+	        isValid: false,
+	        error: `Title contains both emojis and text: "${trimmedTitle}"`,
+	        suggestion: `Use text-only titles for consistency and cross-platform compatability`,
+	        canProceedAnyway: false
+	    };
+	}
+
+	// Check for invisible characters
+	if (INVISIBLE_CHARS.test(trimmedTitle)) {
+	    return {
+	        isValid: false,
+	        error: `Title contains invisible characters that may cause file system issues`,
+	        suggestion: `Please retype the title to remove any hidden characters`
+	    };
+	}
+
     // Check for duplicates
-    const noteExists = await tp.file.exists(destinationPath);
-    if (noteExists) {
-		const message = isNote ? "A note with this title already exists in the destination directory" : "A content type with this title already exists in the destination directory";
-        showNotice(message);
-        return false;
+    try {
+        const noteExists = await tp.file.exists(destinationPath);
+        if (noteExists) {
+	        console.log("detected dupliacte note");
+            return {
+                isValid: false,
+                error: `A ${itemType} with this title already exists in the destination directory`,
+                suggestion: `Try adding a number, date, or descriptive suffix`
+            };
+        }
+    } catch (error) {
+        console.warn(`Could not check for duplicate file: ${error.message}`);
+        // Continue with validation rather than failing
+    }
+
+	console.log("no issues found");
+    return { isValid: true };
+}
+
+/**
+ * Validates emoji for use in Obsidian tags with comprehensive error handling
+ * @param {string} emoji - Emoji string to validate
+ * @returns {Object} - Validation result with error messages and suggestions
+ */
+function isValidEmoji(emoji) {
+    // Check for empty or invalid input
+    if (!emoji || emoji.length === 0) {
+        return {
+            isValid: false,
+            error: "Emoji cannot be empty",
+            suggestion: "Enter a single emoji character"
+        };
     }
     
-    return true;
+    // Check if input matches emoji regular expression
+    if (!EMOJI_REGEX.test(emoji)) {
+        return {
+            isValid: false,
+            error: "Not a valid emoji",
+            suggestion: "Try copying an emoji from your system's emoji picker"
+        };
+    }
+
+    // Check for Zero Width Joiner sequences (problematic for Obsidian tags)
+    const codepoints = Array.from(emoji).map(char => char.codePointAt(0));
+    const hasZWJ = codepoints.includes(0x200D);
+    
+    if (hasZWJ) {
+        return {
+            isValid: false,
+            error: "Emoji contains Zero Width Joiner sequences that may cause tag display issues in Obsidian",
+            suggestion: "Try a simpler emoji without profession/family modifiers (e.g., 👨‍💻 → 💻, 🕵️‍♂️ → 🕵️)",
+            canProceedAnyway: true // Flag to indicate user can override this warning
+        };
+    }
+
+	// Check for invisible characters
+	if (INVISIBLE_CHARS.test(emoji)) {
+	    return {
+	        isValid: false,
+	        error: `Input contains invisible characters that may cause tag issues in Obsidian`,
+	        suggestion: `Enter a single emoji character`
+	    };
+	}
+
+	// Check if input contains whitespace characters
+    if (emoji !== emoji.trim()) { 
+	    return {
+		    isValid: false,
+		    error: "Input cannot contain whitespace characters",
+		    suggestion: "Enter a single emoji character"
+	    }
+    }
+
+	// Check if input contains a single visual character
+	const segmenter = new Intl.Segmenter('en', { granularity: 'grapheme' });
+	const segments = Array.from(segmenter.segment(emoji));
+	
+	if (segments.length > 1) {
+	    return {
+	        isValid: false,
+	        error: "Input cannot contain multiple characters", 
+	        suggestion: "Enter a single emoji character"
+	    };
+	}
+
+	// Check if emoji is reserved for vault administration
+	if (RESERVED_EMOJIS.has(emoji)) {
+		return {
+			isValid: false,
+			error: `"${emoji}" is a reserved emoji for vault administration`,
+			suggestion: "Pick an emoji besides 🥇, 🥈, or ⚛️"
+		}
+	}
+    
+    return { isValid: true };
 }
 
 /**
@@ -109,24 +291,11 @@ function createDestinationPath(noteType, title) {
             return `${PATHS.SECONDARY_CATEGORIES}/${title}.md`;
         case NOTE_TYPES.CONTENT:
             return `${PATHS.CONTENT}/${title}.md`;
-        case "Content Type":
+        case NOTE_TYPES.CONTENT_TYPE:
 	        return `${PATHS.CONTENT_TEMPLATES}/${title}`;
         default:
             throw new Error(`Unknown note type: ${noteType}`);
     }
-}
-
-/**
- * Returns a sanitized file name
- * @param {string} title - Prospective note/content type title
- * @returns {string} - Sanitized note/content type title
-*/
-function sanitizeFileName(title) {
-    return title
-        .replace(/[/\\:*?"<>|]/g, '-')  // Replace invalid chars
-        .replace(/^(CON|PRN|AUX|NUL|COM[1-9]|LPT[1-9])$/i, '$1_') // Windows reserved names
-        .trim()
-        .substring(0, 255); // Length limit
 }
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -163,23 +332,71 @@ async function selectNoteType() {
 }
 
 /**
- * Gets and validates note title with recursive prompting for invalid titles
- * @param {string} initialTitle - Starting title (usually from tp.file.title)
- * @param {string} noteType - Type of note being created
+ * Gets and validates note title with recursive prompting (5-count depth limit) for invalid titles
+ * @param {string} noteType - Type of note being created ('Note', 'Primary Category', 'Secondary Category', or 'Content Type')
  * @returns {Promise<string>} - Validated title
  */
-async function getValidatedNoteTitle(initialTitle, noteType) {
-    const destinationPath = createDestinationPath(noteType, initialTitle);
-    if (await isValidTitle(initialTitle, destinationPath, true)) {
-        console.log(`Title "${initialTitle}" is valid for ${noteType}`);
-        return initialTitle;
-    } 
+async function getValidatedNoteTitle(noteType) {
+	let currentTitle = null;
+    let attempts = 0;
+    const maxAttempts = 5;
     
-    // Recursive prompting for new title
-    const promptText = `Title for New ${noteType} ${noteType === NOTE_TYPES.CONTENT ? 'Note' : 'Category'}:`;
-    const newTitle = await tp.system.prompt(promptText);
+	while (attempts < maxAttempts) {
+		attempts++;
+		
+		// Prompt for manual correction
+        const promptText = attempts < maxAttempts 
+            ? `Title for New ${noteType} (${maxAttempts - attempts + 1} attempts remaining):`
+            : `Last chance - Title for New ${noteType}:`;
+
+		currentTitle = await tp.system.prompt(promptText);
+
+        const destinationPath = createDestinationPath(noteType, currentTitle);
+        const validation = await isValidTitle(currentTitle, destinationPath, true);
+        
+        if (validation.isValid) {
+            console.log(`Title "${currentTitle}" is valid for ${noteType}`);
+            return currentTitle;
+        }
+        
+        // Build helpful error message
+        let errorMessage = `❌ ${validation.error}`;
+        if (validation.suggestion) {
+            errorMessage += `\n💡 Suggestion: ${validation.suggestion}`;
+        }
+        
+        showNotice(errorMessage);
+    }
     
-    return await getValidatedNoteTitle(newTitle, noteType);
+    // If validation fails after max attempts, give user final choice
+    showNotice("❌ Maximum validation attempts reached");
+    
+    const shouldContinue = await tp.system.suggester(
+        ["🔄 Try one more time", "❌ Cancel note creation"],
+        [true, false],
+        false,
+        "What would you like to do?"
+    );
+    
+    if (!shouldContinue) {
+        throw new Error("Note creation cancelled by user");
+    }
+    
+    // One final attempt
+    const finalTitle = await tp.system.prompt(
+        "Final attempt - enter a valid title:"
+    );
+    
+    // Quick final validation (don't loop again)
+    const destinationPath = createDestinationPath(noteType, finalTitle);
+    const finalValidation = await isValidTitle(finalTitle, destinationPath, true);
+    
+    if (finalValidation.isValid) {
+        return finalTitle;
+    } else {
+        showNotice(`❌ Final validation failed: ${finalValidation.error}`);
+        throw new Error("Could not create valid title after maximum attempts");
+    }
 }
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -350,7 +567,7 @@ function getCategorizedEmojis() {
 }
 
 /**
- * Smart emoji selector with categorized options and availability checking
+ * Smart emoji selector with categorized options
  * @param {string} itemName - Name of item being tagged (for context)
  * @returns {Promise<string>} - Selected emoji
  */
@@ -363,7 +580,8 @@ async function selectEmoji(itemName) {
     for (const [categoryName, emojis] of Object.entries(categories)) {
         // Add category separator
         displayOptions.push(`--- ${categoryName} ---`);
-        options.push(`SEPARATOR_${categoryName}`);
+        //options.push(`SEPARATOR_${categoryName}`);
+        options.push(`${EMOJI_SELECTION.TYPES.SEPARATOR_PREFIX}${categoryName}`);
         
         // Add emoji options
         emojis.forEach(item => {
@@ -373,12 +591,12 @@ async function selectEmoji(itemName) {
     }
     
     // Add utility options
-    displayOptions.push("--- Utilities ---");
-    options.push("SEPARATOR_Utilities");
-    displayOptions.push("✏️ Enter emoji manually");
-    options.push("MANUAL_ENTRY");
-    displayOptions.push("🎲 Random selection");
-    options.push("RANDOM");
+    displayOptions.push(EMOJI_SELECTION.DISPLAY_TEXT.UTILITIES);
+    options.push(`${EMOJI_SELECTION.TYPES.UTILITIES}Utilities`);
+    displayOptions.push(EMOJI_SELECTION.DISPLAY_TEXT.MANUAL);
+    options.push(EMOJI_SELECTION.TYPES.MANUAL);
+    displayOptions.push(EMOJI_SELECTION.DISPLAY_TEXT.RANDOM);
+    options.push(EMOJI_SELECTION.TYPES.RANDOM);
     
     const selection = await tp.system.suggester(
         displayOptions,
@@ -386,110 +604,125 @@ async function selectEmoji(itemName) {
         false,
         `Select emoji for "${itemName}":`
     );
-    
-    // Handle special selections
-    if (!selection || selection.startsWith("SEPARATOR_")) {
-        showNotice("Using default emoji 📁");
-        return "📁";
+
+	// Handle user pressing escape key or exiting dropdown menu
+    if (!selection) {
+	    showNotice(`⚠️ Emoji selection cancelled by user, using default emoji "${EMOJI_SELECTION.DEFAULT_EMOJI}"`);
+        return EMOJI_SELECTION.DEFAULT_EMOJI;
+	}
+
+	// Handle user selecting a category separator
+	if (selection.startsWith(EMOJI_SELECTION.TYPES.UTILITIES)) {
+	    showNotice("❌ Select an emoji, not a category header");
+	    return await selectEmoji(itemName); // Recursive retry
+	}
+
+	// Handle manual entry option
+    if (selection === EMOJI_SELECTION.TYPES.MANUAL) {
+        return await getValidatedEmoji();
     }
-    
-    if (selection === "MANUAL_ENTRY") {
-        return await handleManualEmojiEntry();
-    }
-    
-    if (selection === "RANDOM") {
+
+	// Handle randomized emoji choice option
+    if (selection === EMOJI_SELECTION.TYPES.RANDOM) {
         const allEmojis = Object.values(categories).flat().map(e => e.emoji);
-        return allEmojis[Math.floor(Math.random() * allEmojis.length)] || "📁";
+        return allEmojis[Math.floor(Math.random() * allEmojis.length)] || EMOJI_SELECTION.DEFAULT_EMOJI;
     }
     
     return selection;
 }
 
 /**
- * Detects if an emoji contains Zero Width Joiner sequences that break Obsidian tags
- * @param {string} emoji - Emoji string to analyze
- * @returns {Object} - Analysis result
- */
-function analyzeEmojiForObsidianTags(emoji) {
-    if (!emoji || emoji.length === 0) {
-        return {
-            isTagSafe: false,
-            reason: "Empty input"
-        };
-    }
-    
-    const codepoints = Array.from(emoji).map(char => char.codePointAt(0));
-    const hasZWJ = codepoints.includes(0x200D); // Zero Width Joiner
-    
-    if (hasZWJ) {
-        return {
-            isTagSafe: false,
-            reason: "Contains Zero Width Joiner (family/profession emoji)",
-            codepoints: codepoints.map(cp => `U+${cp.toString(16).toUpperCase().padStart(4, '0')}`)
-        };
-    }
-    
-    return {
-        isTagSafe: true,
-        reason: "Should work fine in Obsidian tags"
-    };
-}
-
-/**
- * Handles manual emoji entry with validation
+ * Gets and validates emoji with prompting for invalid entries
  * @returns {Promise<string>} - Validated emoji or fallback
  */
-async function handleManualEmojiEntry() {
+async function getValidatedEmoji() {
+    let currentEmoji = null;
     let attempts = 0;
-    const maxAttempts = 3;
+    const maxAttempts = 5;
     
     while (attempts < maxAttempts) {
-        const manualEmoji = await tp.system.prompt(
-            `Enter emoji character (${attempts + 1}/${maxAttempts}):`
-        );
+        attempts++;
         
-        if (!manualEmoji) {
-            showNotice("Manual entry cancelled");
-            return "📁";
-        }
-        
-        if (!EMOJI_REGEX.test(manualEmoji)) {
-            attempts++;
-            showNotice(`That doesn't appear to be a valid emoji. ${maxAttempts - attempts} attempts remaining.`);
-            continue;
-        }
-        
-        // Check specifically for ZWJ sequences
-        const analysis = analyzeEmojiForObsidianTags(manualEmoji);
-        
-        if (!analysis.isTagSafe) {
-            // Show detailed warning as a notice first
-			showNotice(`⚠️ Complex emoji detected: "${manualEmoji}" contains Zero Width Joiner (ZWJ) sequences. Emojis with ZWJ sequences (e.g., 👨‍💻, 🕵️‍♂️) may cause tag display issues in Obsidian.`);
+        // Prompt for emoji entry
+        const promptText = attempts < maxAttempts
+            ? `Search Tag Emoji for New Content Type (${maxAttempts - attempts + 1} attempts remaining):`
+            : `Last chance - Emoji for New Content Type:`;
 
-			const proceed = await tp.system.suggester(
-			    ["✅ Use anyway", "❌ Try different emoji"],
-			    [true, false],
-			    false,
-			    "Continue with this emoji?"
-			);
+        currentEmoji = await tp.system.prompt(promptText);
+        
+        const validation = isValidEmoji(currentEmoji);
+        
+        if (validation.isValid) {
+            console.log(`Emoji "${currentEmoji}" is valid for Content Type`);
+            return currentEmoji;
+        }
+        
+        // Build helpful error message
+        let errorMessage = `❌ ${validation.error}`;
+        if (validation.suggestion) {
+            errorMessage += `\n💡 Suggestion: ${validation.suggestion}`;
+        }
+        
+        showNotice(errorMessage);
+        
+        // Special handling for ZWJ emojis - allow user to proceed anyway
+        if (validation.canProceedAnyway) {
+            const proceed = await tp.system.suggester(
+                ["✅ Use anyway (may cause display issues)", "❌ Try different emoji"],
+                [true, false],
+                false,
+                `Continue with "${currentEmoji}"?`
+            );
             
             if (proceed) {
-                showNotice(`⚠️ Using ZWJ emoji: ${manualEmoji}`);
-                return manualEmoji;
-            } else {
-                attempts++;
-                if (attempts < maxAttempts) {
-                    showNotice(`Please try a different emoji. ${maxAttempts - attempts} attempts remaining.`);
-                }
-                continue;
+                showNotice(`⚠️ Using complex emoji: ${currentEmoji}`);
+                return currentEmoji;
             }
+            // If the user chooses not to proceed, continue the loop
         }
-        
-        return manualEmoji;
     }
     
-    showNotice("Max attempts reached. Using fallback emoji 📁");
-    return "📁";
+    // If validation fails after max attempts, give user final choice
+    showNotice("❌ Maximum validation attempts reached");
+    
+    const shouldContinue = await tp.system.suggester(
+        ["🔄 Try one more time", "📁 Use fallback emoji", "❌ Cancel creation"],
+        ["retry", "fallback", "cancel"],
+        false,
+        "What would you like to do?"
+    );
+    
+    if (shouldContinue === "cancel") {
+        throw new Error("Emoji selection cancelled by user");
+    }
+    
+    if (shouldContinue === "fallback") {
+        showNotice("Using fallback emoji: 📁");
+        return "📁";
+    }
+    
+    // One final attempt
+    const finalEmoji = await tp.system.prompt("Final attempt - enter a valid emoji:");
+    
+    const finalValidation = isValidEmoji(finalEmoji);
+    
+    if (finalValidation.isValid) {
+        return finalEmoji;
+    } else if (finalValidation.canProceedAnyway) {
+        // Give one last chance for ZWJ override
+        const finalProceed = await tp.system.suggester(
+            ["✅ Use anyway", "📁 Use fallback emoji"],
+            [true, false],
+            false,
+            `Final validation failed: ${finalValidation.error}. Use anyway?`
+        );
+        
+        return finalProceed ? finalEmoji : "📁";
+    } else {
+        showNotice(`❌ Final validation failed: ${finalValidation.error}`);
+        showNotice("Using fallback emoji: 📁");
+        return "📁";
+    }
 }
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -514,7 +747,7 @@ async function getAvailableContentTypes() {
         const typeName = folder.name;
         
         // Extract emoji from metadata
-        let emoji = "📝"; // Default fallback
+        let emoji = EMOJI_SELECTION.DEFAULT_EMOJI; // Default fallback
         try {
             const metadataPath = `${PATHS.CONTENT_TEMPLATES}/${folder.name}/Metadata.md`;
             const metadataFile = app.vault.getAbstractFileByPath(metadataPath);
@@ -551,25 +784,6 @@ async function getAvailableContentTypes() {
     }
     
     return contentTypes.sort((a, b) => a.name.localeCompare(b.name));
-}
-
-/**
- * Gets and validates content type title with recursive prompting for invalid titles
- * @param {string} initialTitle - Starting title
- * @returns {Promise<string>} - Validated title
- */
-async function getValidatedContentTypeTitle(initialTitle) {
-    const destinationPath = createDestinationPath("Content Type", initialTitle);
-    if (await isValidTitle(initialTitle, destinationPath, false)) {
-        console.log(`Title "${initialTitle}" is valid for Content Type`);
-        return initialTitle;
-    } 
-    
-    // Recursive prompting for new title
-    const promptText = `Title for New Content Type`;
-    const newTitle = await tp.system.prompt(promptText);
-    
-    return await getValidatedContentTypeTitle(newTitle);
 }
 
 /**
@@ -612,11 +826,11 @@ async function createNewContentType() {
     // Get content type name
     let typeName = null;
     while (!typeName) {
-        typeName = await getValidatedContentTypeTitle(null);
+        typeName = await getValidatedNoteTitle("Content Type");
     }
     
     // Select emoji
-    const selectedEmoji = await selectEmoji(typeName);
+    const selectedEmoji = await selectEmoji();
     
     // Create template structure
     await createTemplateStructure(typeName, selectedEmoji);
@@ -849,13 +1063,13 @@ async function executeNoteCreation() {
         console.log(`Selected note type: ${noteType}`);
         
         // Step 2: Get and validate title
-        const title = await getValidatedNoteTitle(tp.file.title, noteType);
+        const title = await getValidatedNoteTitle(noteType);
         console.log(`Validated title: "${title}"`);
         
         // Step 3: Execute type-specific workflow
         switch(noteType) {
             case NOTE_TYPES.PRIMARY:
-                const emoji = await selectEmoji(title);
+                const emoji = await selectEmoji();
                 config = createNoteConfig({ noteType, title, emoji });
                 break;
                 
@@ -865,9 +1079,9 @@ async function executeNoteCreation() {
                 break;
                 
             case NOTE_TYPES.CONTENT:
-                const contentType = await selectContentType();
                 const contentPrimaryCategories = await selectCategories("primary");
                 const contentSecondaryCategories = await selectCategories("secondary");
+                const contentType = await selectContentType();
                 config = createNoteConfig({ 
                     noteType, 
                     title, 
