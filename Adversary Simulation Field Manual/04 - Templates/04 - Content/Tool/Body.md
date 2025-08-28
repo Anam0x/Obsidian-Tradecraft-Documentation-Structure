@@ -1,4 +1,3 @@
-
 ## Overview
 
 ## Requirements
@@ -12,15 +11,3 @@
 ## Under-the-Hood
 
 ## Help Menu
-
-***
-
-## Resources:
-
-| Hyperlink | Info |
-| --------- | ---- |
-|           |      |
-
-[^1]: 
-
-***

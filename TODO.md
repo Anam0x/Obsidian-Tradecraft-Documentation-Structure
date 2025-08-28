@@ -16,14 +16,55 @@
   - [ ] README
   - [ ] Update Obsidian Git note
   - [ ] Setup scripts
-   - [ ] Bash for *NIX-like
+   - [ ] Bash for \*NIX-like
    - [ ] PowerShell for Windows
 
 ## In Progress
 
-### Highest Priority (Blocking Issues)
+### High Priority (Core Functionality and Usability)
 
-- [ ] Critical error handling
+- [ ] High priority error handling
+  - [ ] Templates
+    - [ ] Validate template content before processing
+    - [ ] Potentially reading stale metadata in `getAvailableContentTypes`
+  - [ ] Check that `app.vault.*` functions are accessible before executing main workflow
+  - [ ] Cross-platform file separators
+  - [ ] File system limitations
+    - [ ] Check for disk space before creating files
+    - [ ] File system permissions
+    - [ ] Unicode file names
+  - [ ] Figure out how to handle instances of untitled notes being created after error being thrown
+
+- [ ] Installation instructions (enables adoption)
+  - [ ] README
+  - [ ] Rewrite the "Vault Appendix - Modifying Vault Structure" note
+  - [ ] Linux, Windows, macOS, Android, iOS support (Obsidian Git plugin is not recommended for mobile app)
+  - [ ] Automatically install, enable, configure required community plugins (if possible)
+
+### Medium Priority (Enhancement)
+
+- [ ] Add Python script to scrape MITRE ATT&CK Framework and generate TTP notes
+- [ ] Personal/unfinished ideas directory
+- [ ] Example notes for new content types (e.g., Command, Idea, IOC)
+  - [ ] Consider adding example notes for each new content type
+
+### Low Priority (Cleanup/Polish)
+
+- [ ] Break up large notes (PowerView, Zettelkasten) to maintain principle of atomicity
+- [ ] Race condition handling (low probability for personal use)
+
+## Done ✓
+
+- [x] Header/Footer template restructuring (impacts all new notes)
+  - [x] Replace "Header" with "Footer"
+  - [x] Add a dividing line between individual template structures
+  - [x] Remove the "Resources" table and footnotes from all content templates and move them to the new "Footer" element
+  - [x] Update main script
+
+- [x] Provide template for new content types (e.g., "Command", "Idea", "IOC")
+  - [x] Replace all blockquote template instances with admonition block-styled content
+
+- [x] Critical error handling
   - [ ] ~~Sanitize file names (illegal characters, starts with a dot, Windows reserved names)~~
   - [x] Valid note file name
     - [x] Empty/undefined/default
@@ -45,39 +86,7 @@
     - [x] Invisible characters
   - [x] Infinite recursion in `getValidatedNoteTitle` and `getValidatedContentTypeTitle` (merged into `getValidatedNoteTitle`)
   - [ ] ~~Templater plugin dependency (check if available first)~~ (likely unnecessary since Templater scripts can't run without Templater)
-  - [ ] Validate template content before processing
   - [ ] ~~Array bounds issues with `allEmojis` constant~~ (negated in latest commit)
-  - [ ] Potentially reading stale metadata in `getAvailableContentTypes`
-  - [ ] Figure out how to handle instances of untitled notes being created after error being thrown
-
-### High Priority (Core Functionality and Usability)
-
-- [ ] Provide template for new content types (e.g., "Command", "Idea", "IOC")
-  - [ ] Replace all blockquote template instances with admonition block-styled content
-- [ ] Header/Footer template restructuring (impacts all new notes)
-  - [ ] Replace "Header" with "Footer"
-  - [ ] Create a utility function to add a dividing line between individual template structures
-  - [ ] Remove the "Resources" table and footnotes from all content templates and move them to the new "Footer" element
-  - [ ] Update main script
-- [ ] Installation instructions (enables adoption)
-  - [ ] README
-  - [ ] Rewrite the "Vault Appendix - Modifying Vault Structure" note
-  - [ ] Linux, Windows, macOS, Android, iOS support
-  - [ ] Automatically install, enable, configure required community plugins (if possible)
-
-### Medium Priority (Enhancement)
-
-- [ ] Add Python script to scrape MITRE ATT&CK Framework and generate TTP notes
-- [ ] Personal/unfinished ideas directory
-- [ ] Example notes for new content types (e.g., Command, Idea, IOC)
-  - [ ] Consider adding example notes for each new content type
-
-### Low Priority (Cleanup/Polish)
-
-- [ ] Break up large notes (PowerView, Zettelkasten) to maintain principle of atomicity
-- [ ] Race condition handling (low probability for personal use)
-
-## Done ✓
 
 - [x] Emoji issues
   - [x] Fix emoji detection/regex issues
@@ -103,7 +112,6 @@
   - [x] IOC (footprints)
   - [x] Lab Setup (test tube)
   - [x] Command (dollar sign)
-  - [x] Artificial Intelligence (brain)
 
 - [x] Primary category ideas
   - [x] Social Engineering (theater mask emoji as the special search tag)
@@ -112,6 +120,7 @@
   - [x] Threat Intelligence (smiling imp with horns)
   - [x] OSINT (magnifying glass)
   - [x] Cryptography (old key)
+  - [x] Artificial Intelligence (brain)
 
 - [x] Add "special tags" for primary category titles; secondary categories should not be necessary
   - [x] Change currently tracked notes

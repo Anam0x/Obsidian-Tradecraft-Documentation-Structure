@@ -16,8 +16,9 @@ type: Basic
 
 This note covers instructions for how to add primary/secondary categories, content types, and their respective templates. ~~In future releases of this project, I hope to add logic either internally to Obsidian or as external scripts to automate this behavior safely.~~
 
-> *Note*: 
-> This note is now largely obsolete thanks to the new [[0400 - Gen_Note]] script. It will need to be rewritten.
+```ad-todo
+This note is now largely obsolete thanks to the new [[0400 - Gen_Note]] script. It will need to be rewritten.
+```
 
 ## ~~Primary and Secondary Categories~~
 

@@ -18,10 +18,11 @@ type: Playbook
 ***
 ## Overview
 
-This playbook provides a structured approach to enumerating _Active Directory_ (*AD*)[^1] environments using `PowerView.ps1`[^2], a flexible PowerShell-based utility for domain enumeration. It is intended for post-compromise scenarios where the operator has access to a domain-joined host and aims to map the domain’s logical structure, user accounts, group memberships, trust relationships, and policy configurations.
+This playbook provides a structured approach to enumerating _Active Directory_ (*AD*) environments using `PowerView.ps1`, a flexible PowerShell-based utility for domain enumeration. It is intended for post-compromise scenarios where the operator has access to a domain-joined host and aims to map the domain’s logical structure, user accounts, group memberships, trust relationships, and policy configurations.
 
-> *Note*:
-> These commands were written to be executed from the *Mythic*[^3] command and control (C2) framework.  To execute commands whose output is being truncated, it's recommended to submit `powerpick $FormatEnumerationLimit = -1; <powerview-command>` to the *Apollo*[^4] command interface.
+```ad-info
+These commands were written to be executed from the *Mythic* command and control (C2) framework.  To execute commands whose output is being truncated, it's recommended to submit `powerpick $FormatEnumerationLimit = -1; <powerview-command>` to the *Apollo* command interface.
+```
 
 ## Steps
 
@@ -459,11 +460,6 @@ Find-InterestingDomainShareFile -Include *.doc*, *.xls*, *.ppt*, *.csv, *.pdf, *
 | [Active Directory - Enumeration: PowerView CheatSheet](https://zflemingg1.gitbook.io/undergrad-tutorials/powerview/powerview-cheatsheet) | Zach Fleming's (AKA _zflemingg1_) AD enumeration cheat sheet |
 | [HarmJ0y GitHub Gist - PowerView 3.0 Tricks](https://gist.github.com/HarmJ0y/184f9822b195c52dd50c379ed3117993)                           | PowerView 3.0 sample commands by PowerSploit co-creator      |
 | [PowerSploit - Recon](https://powersploit.readthedocs.io/en/latest/Recon/)                                                               | PowerView documentation                                      |
-
-[^1]: https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/get-started/virtual-dc/active-directory-domain-services-overview
-[^2]: https://powersploit.readthedocs.io/en/latest/Recon/
-[^3]: https://github.com/its-a-feature/Mythic
-[^4]: https://github.com/MythicAgents/Apollo
 
 ***
 

@@ -1,9 +1,6 @@
-
 ## Summary
 
-
 ## Environment Overview
-
 
 ## Tooling Breakdown
 
@@ -13,21 +10,8 @@
 
 ## TTP Breakdown
 
-
 | **Tactic** | **Technique (Name + ID)** | **Usage Tags** | **Notes** |
 | ---------- | ------------------------- | -------------- | --------- |
 |            |                           |                |           |
 
 ## Follow-up Items
-
-***
-
-## Resources:
-
-| Hyperlink | Info |
-| --------- | ---- |
-|           |      |
-
-[^1]: 
-
-***

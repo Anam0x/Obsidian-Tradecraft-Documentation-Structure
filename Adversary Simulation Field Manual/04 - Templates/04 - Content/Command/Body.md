@@ -1,14 +1,21 @@
-
 ## Overview
 
-***
+## Requirements
 
-## Resources:
+* [ ] Requirement 1
+	* [ ] Requirement 1.1
+	* [ ] Requirement 1.2
+* [ ] Requirement 2
+* [ ] Requirement 3
 
-| Hyperlink | Info |
-| --------- | ---- |
-|           |      |
+## Syntax
 
-[^1]: 
+```powershell
 
-***
+```
+
+```bash
+
+```
+
+## Examples & Use Cases

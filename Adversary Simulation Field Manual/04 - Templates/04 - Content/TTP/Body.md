@@ -1,7 +1,8 @@
-
 ## Overview
 
-> ℹ️ **Note:** The content in this page is directly adapted from the [MITRE ATT&CK](https://attack.mitre.org/techniques/T1558/003/) framework for personal reference. Please consult the original MITRE ATT&CK entry for the most up-to-date and complete information.
+```ad-info
+The content in this page is directly adapted from the [MITRE ATT&CK](https://attack.mitre.org/techniques/T1558/003/) framework for personal reference. Please consult the original MITRE ATT&CK entry for the most up-to-date and complete information.
+```
 
 ## Procedure Examples
 
@@ -22,16 +23,3 @@
 | ID  | Data Source | Data Component | Detects |
 | --- | ----------- | -------------- | ------- |
 |     |             |                |         |
-
-***
-
-## Resources
-
-| Hyperlink                                                                  | Info                                   |
-| -------------------------------------------------------------------------- | -------------------------------------- |
-| [Technique: Sub-Technique](https://attack.mitre.org/techniques/TXXXX/YYY/) | MITRE ATT&CK Entry for "Sub-Technique" |
-| [Technique, Technique TXXXX](https://attack.mitre.org/techniques/TXXXX/)   | MITRE ATT&CK Entry for "Technique"     |
-
-[^1]: 
-
-***

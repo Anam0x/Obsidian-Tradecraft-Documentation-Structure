@@ -1,24 +1,9 @@
-
 ## Summary
-
 
 ## Learning Objectives
 
-
 ## Exercises or Lab Work
 
-| Exercise/Lab | Link to Debrief |
-| ------------ | --------------- |
-|              |                 |
-
-***
-
-## Resources:
-
-| Hyperlink | Info |
-| --------- | ---- |
-|           |      |
-
-[^1]: 
-
-***
+| Exercise/Lab | Link(s) to Debrief/Note |
+| ------------ | ----------------------- |
+|              |                         |

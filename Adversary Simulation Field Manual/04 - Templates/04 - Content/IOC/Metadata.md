@@ -1,5 +1,5 @@
 ---
-aliases: 
+aliases:
 tags:
   - 👣IOC
 primary categories:

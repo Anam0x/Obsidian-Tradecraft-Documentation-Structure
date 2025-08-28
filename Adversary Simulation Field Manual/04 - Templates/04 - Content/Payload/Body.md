@@ -1,4 +1,3 @@
-
 ## Overview
 
 ## File Contents
@@ -14,15 +13,3 @@
 ```c#
 
 ```
-
-***
-
-## Resources:
-
-| Hyperlink | Info |
-| --------- | ---- |
-|           |      |
-
-[^1]: 
-
-***

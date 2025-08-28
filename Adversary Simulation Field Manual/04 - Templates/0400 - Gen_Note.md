@@ -62,6 +62,10 @@ const RESERVED_NAMES = /^(CON|PRN|AUX|NUL|COM[1-9]|LPT[1-9])(\.|$)/i;
 
 const EMOJI_REGEX = /[\u{1F600}-\u{1F64F}]|[\u{1F300}-\u{1F5FF}]|[\u{1F680}-\u{1F6FF}]|[\u{1F1E0}-\u{1F1FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]|[\u{1F900}-\u{1F9FF}]|[\u{1FA70}-\u{1FAFF}]|[\u{2300}-\u{23FF}]|[\u{2B50}]|[\u{2194}-\u{21AA}]|[\u{231A}-\u{231B}]|[\u{25AA}-\u{25FE}]/u;
 
+const DIVIDER = "\n***\n";
+
+const TIMESTAMP = "*Created Date*: <%+tp.file.creation_date(\"MMMM Do YYYY (HH:mm a)\")%\>  \n*Last Modified Date*: \<%+tp.file.last_modified_date(\"MMMM Do YYYY (HH:mm a)\")%\>";
+
 //////////////////////////////////////////////////////////////////////////////////
 //                              UTILITY FUNCTIONS                              //
 //////////////////////////////////////////////////////////////////////////////////
@@ -111,7 +115,7 @@ async function isValidTitle(title, destinationPath, isNote) {
     }
 
 	// Check for leading dots
-	if (trimmedTitle.startsWith('.')) {
+	if (title.startsWith('.')) {
         return {
             isValid: false,
             error: `Title cannot start with a dot (.) character`,
@@ -613,8 +617,8 @@ async function selectEmoji(itemName) {
 
 	// Handle user selecting a category separator
 	if (selection.startsWith(EMOJI_SELECTION.TYPES.UTILITIES)) {
-	    showNotice("❌ Select an emoji, not a category header");
-	    return await selectEmoji(itemName); // Recursive retry
+	    showNotice(`⚠️ User selected a category header, using default emoji "${EMOJI_SELECTION.DEFAULT_EMOJI}"`);
+	    return EMOJI_SELECTION.DEFAULT_EMOJI;
 	}
 
 	// Handle manual entry option
@@ -858,7 +862,7 @@ async function createTemplateStructure(typeName, emoji) {
         // Template files to create
         const templateFiles = [
             { source: "Metadata.md", target: "Metadata.md" },
-            { source: "Header.md", target: "Header.md" },
+            { source: "Footer.md", target: "Footer.md" },
             { source: "Body.md", target: "Body.md" }
         ];
         
@@ -947,13 +951,31 @@ function createNoteConfig({
                 destination: `${PATHS.CONTENT}/`,
                 contentType: contentTypeConfig,
                 metadataTemplate: `[[04 - Templates/04 - Content/${contentTypeConfig.name}/Metadata]]`,
-                headerTemplate: `[[04 - Templates/04 - Content/${contentTypeConfig.name}/Header]]`,
-                bodyTemplate: `[[04 - Templates/04 - Content/${contentTypeConfig.name}/Body]]`
+                bodyTemplate: `[[04 - Templates/04 - Content/${contentTypeConfig.name}/Body]]`,
+                footerTemplate: `[[04 - Templates/04 - Content/${contentTypeConfig.name}/Footer]]`
             };
             
         default:
             throw new Error(`Unsupported note type: ${noteType}`);
     }
+}
+
+/**
+ * Loads all required templates for a note configuration
+ * @param {Object} config - Note configuration object
+ * @returns {Promise<Object>} - Template content object
+ */
+async function loadNoteTemplates(config) {
+    const templates = {
+        metadata: await tp.file.include(config.metadataTemplate),
+        body: await tp.file.include(config.bodyTemplate)
+    };
+    
+    if (config.footerTemplate) {
+        templates.footer = await tp.file.include(config.footerTemplate);
+    }
+    
+    return templates;
 }
 
 /**
@@ -963,28 +985,29 @@ function createNoteConfig({
  */
 async function buildNoteContent(config) {
     try {
-        // Load and customize metadata template
-        let metadata = await tp.file.include(config.metadataTemplate);
-        metadata = customizeMetadata(metadata, config);
-        
-        // Build page title (no prefixes needed)
+		// Load and customize templates
+        const templates = await loadNoteTemplates(config);
+
+		// Build page header
         const pageTitle = `# [[${config.title}]]`;
-        
-        // Load body template
-        const body = await tp.file.include(config.bodyTemplate);
-        
-        // Add timestamps
-        const timestamps = "\n*Created Date*: <%+tp.file.creation_date(\"MMMM Do YYYY (HH:mm a)\")%\>  \n*Last Modified Date*: \<%+tp.file.last_modified_date(\"MMMM Do YYYY (HH:mm a)\")%\>";
-        
-        // Assemble content based on note type
-        const contentParts = [metadata, pageTitle];
-        
-        if (config.noteType === NOTE_TYPES.CONTENT) {
-            const header = await tp.file.include(config.headerTemplate);
-            contentParts.push(header);
+		const header = templates.metadata + pageTitle
+		
+        // Each note has a metadata section and back-linked title
+        const contentParts = [header];
+
+		// Assemble content based on note type
+		switch (config.noteType) {
+            case NOTE_TYPES.CONTENT:
+                contentParts.push(DIVIDER, templates.body, DIVIDER, templates.footer, DIVIDER, TIMESTAMP);
+                break;
+            case NOTE_TYPES.PRIMARY:
+            case NOTE_TYPES.SECONDARY:
+                contentParts.push(DIVIDER, templates.body, DIVIDER, TIMESTAMP);
+                break;
+            default:
+                console.warn(`Unknown note type: ${config.noteType}`);
+                contentParts.push(DIVIDER, templates.body, DIVIDER, TIMESTAMP);
         }
-        
-        contentParts.push(body, timestamps);
         
         return contentParts.join("\n");
         
@@ -1056,7 +1079,7 @@ async function executeNoteCreation() {
     let config = null;
     
     try {
-        console.log("=== Red Team Note Creation Started ===");
+        console.log("=== Adversary Simulation Note Creation Started ===");
         
         // Step 1: Select note type
         const noteType = await selectNoteType();
@@ -1103,7 +1126,7 @@ async function executeNoteCreation() {
         const noteContent = await buildNoteContent(config);
         console.log("=== Note Creation Completed Successfully ===");
         
-        return noteContent;
+        return noteContent.trimEnd();
         
     } catch (error) {
         logError(error, "Note creation workflow");

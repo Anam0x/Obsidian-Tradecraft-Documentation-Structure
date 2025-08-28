@@ -50,8 +50,9 @@ icon: triforce
 
 #### Example
 
-![[Obsidian - Linking Content (Old)#Before]]
-![[Obsidian - Linking Content (Old)#After]]
+![[Obsidian - Linking Content#Before]]
+
+![[Obsidian - Linking Content#After]]
 
 ### 2. Colorized Tag Pills
 

@@ -1,19 +1,5 @@
-
 ## Overview
-
 
 ## Steps
 
 * [ ] 
-
-***
-
-## Resources:
-
-| Hyperlink | Info |
-| --------- | ---- |
-|           |      |
-
-[^1]: 
-
-***

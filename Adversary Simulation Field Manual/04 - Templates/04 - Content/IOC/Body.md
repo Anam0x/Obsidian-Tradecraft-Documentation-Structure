@@ -1,14 +1,18 @@
-
 ## Overview
 
-***
+## Details
 
-## Resources:
+## Detection
 
-| Hyperlink | Info |
-| --------- | ---- |
-|           |      |
+YARA rule (if applicable):
+```
 
-[^1]: 
+```
 
-***
+## Related Threats/Campaigns
+
+| Threat Actor / Campaign | Description                                                 | Reference / Report                          |
+| ----------------------- | ----------------------------------------------------------- | ------------------------------------------- |
+| APT29                   | Russian-linked group known for stealthy phishing campaigns. | [Mandiant Report](https://www.mandiant.com) |
+| Emotet                  | Banking trojan turned modular malware platform.             | [CISA Advisory](https://cisa.gov)           |
+| SolarWinds Campaign     | Supply chain compromise with widespread impact.             | [FireEye Analysis](https://fireeye.com)     |

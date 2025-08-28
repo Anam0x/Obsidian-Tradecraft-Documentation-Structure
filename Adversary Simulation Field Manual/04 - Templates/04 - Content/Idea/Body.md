@@ -1,14 +1,11 @@
-
 ## Overview
 
-***
+## Context/Background
 
-## Resources:
+## Potential Applications
 
-| Hyperlink | Info |
-| --------- | ---- |
-|           |      |
+## Next Steps
 
-[^1]: 
-
-***
+1. [ ] Step 1
+2. [ ] Step 2
+3. [ ] Step 3
